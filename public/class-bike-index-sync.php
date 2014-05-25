@@ -2,7 +2,7 @@
 /**
  * Plugin Name.
  *
- * @package   Bike_Index_Widget
+ * @package   Bike_Index_Sync
  * @author    Your Name <email@example.com>
  * @license   GPL-2.0+
  * @link      http://example.com
@@ -14,14 +14,14 @@
  * public-facing side of the WordPress site.
  *
  * If you're interested in introducing administrative or dashboard
- * functionality, then refer to `class-bike-index-widget-admin.php`
+ * functionality, then refer to `class-bike-index-sync-admin.php`
  *
  * @TODO: Rename this class to a proper name for your plugin.
  *
- * @package Bike_Index_Widget
+ * @package Bike_Index_Sync
  * @author  Your Name <email@example.com>
  */
-class Bike_Index_Widget {
+class Bike_Index_Sync {
 
 	/**
 	 * Plugin version, used for cache-busting of style and script file references.
@@ -33,7 +33,7 @@ class Bike_Index_Widget {
 	const VERSION = '1.0.0';
 
 	/**
-	 * @TODO - Rename "bike-index-widget" to the name of your plugin
+	 * @TODO - Rename "bike-index-sync" to the name of your plugin
 	 *
 	 * Unique identifier for your plugin.
 	 *
@@ -46,7 +46,7 @@ class Bike_Index_Widget {
 	 *
 	 * @var      string
 	 */
-	protected $plugin_slug = 'bike-index-widget';
+	protected $plugin_slug = 'bike-index-sync';
 
 	/**
 	 * Instance of this class.

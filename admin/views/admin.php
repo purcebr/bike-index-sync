@@ -5,7 +5,7 @@
  * This includes the header, options, and other information that should provide
  * The User Interface to the end user.
  *
- * @package   Bike_Index_Widget
+ * @package   Bike_Index_Sync
  * @author    Your Name <email@example.com>
  * @license   GPL-2.0+
  * @link      http://example.com
@@ -17,10 +17,10 @@
 
 	<h2><?php echo esc_html( get_admin_page_title() ); ?></h2>
 	<form action="options.php" method="post">
-	
+
 		<?php
-		settings_fields( 'logmycalls-settings-group' );
-		do_settings_sections( 'logmycalls-settings' );
+		settings_fields( 'bike-index-sync-settings-group' );
+		do_settings_sections( 'bike-index-sync-settings' );
 		?>
 		<input name="Submit" type="submit" value="Save Changes" />
 	</form>

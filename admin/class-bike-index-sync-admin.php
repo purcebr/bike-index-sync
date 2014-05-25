@@ -2,7 +2,7 @@
 /**
  * Plugin Name.
  *
- * @package   Bike_Index_Widget_Admin
+ * @package   Bike_Index_Sync_Admin
  * @author    Your Name <email@example.com>
  * @license   GPL-2.0+
  * @link      http://example.com
@@ -11,10 +11,10 @@
 
 /**
  *
- * @package Bike_Index_Widget_Admin
+ * @package Bike_Index_Sync_Admin
  * @author  Your Name <email@example.com>
  */
-class Bike_Index_Widget_Admin {
+class Bike_Index_Sync_Admin {
 
 	/**
 	 * Instance of this class.
@@ -46,7 +46,7 @@ class Bike_Index_Widget_Admin {
 		 * Call $plugin_slug from public plugin class.
 		 *
 		 */
-		$plugin = Bike_Index_Widget::get_instance();
+		$plugin = Bike_Index_Sync::get_instance();
 		$this->plugin_slug = $plugin->get_plugin_slug();
 
 		// Load admin style sheet and JavaScript.
@@ -54,7 +54,7 @@ class Bike_Index_Widget_Admin {
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_scripts' ) );
 
 		// Add the options page and menu item.
-		add_action( 'admin_init', array( $this, 'bikeindex_settings_init' ) );
+		add_action( 'admin_init', array( $this, 'bikeindex_sync_settings_init' ) );
 		add_action( 'admin_menu', array( $this, 'add_plugin_admin_menu' ) );
 
 		// Add an action link pointing to the options page.
@@ -102,7 +102,7 @@ class Bike_Index_Widget_Admin {
 	 *
 	 * @TODO:
 	 *
-	 * - Rename "Bike_Index_Widget" to the name your plugin
+	 * - Rename "Bike_Index_Sync" to the name your plugin
 	 *
 	 * @since     1.0.0
 	 *
@@ -116,7 +116,7 @@ class Bike_Index_Widget_Admin {
 
 		$screen = get_current_screen();
 		if ( $this->plugin_screen_hook_suffix == $screen->id ) {
-			wp_enqueue_style( $this->plugin_slug .'-admin-styles', plugins_url( 'assets/css/admin.css', __FILE__ ), array(), Bike_Index_Widget::VERSION );
+			wp_enqueue_style( $this->plugin_slug .'-admin-styles', plugins_url( 'assets/css/admin.css', __FILE__ ), array(), Bike_Index_Sync::VERSION );
 		}
 
 	}
@@ -126,7 +126,7 @@ class Bike_Index_Widget_Admin {
 	 *
 	 * @TODO:
 	 *
-	 * - Rename "Bike_Index_Widget" to the name your plugin
+	 * - Rename "Bike_Index_Sync" to the name your plugin
 	 *
 	 * @since     1.0.0
 	 *
@@ -140,7 +140,7 @@ class Bike_Index_Widget_Admin {
 
 		$screen = get_current_screen();
 		if ( $this->plugin_screen_hook_suffix == $screen->id ) {
-			wp_enqueue_script( $this->plugin_slug . '-admin-script', plugins_url( 'assets/js/admin.js', __FILE__ ), array( 'jquery' ), Bike_Index_Widget::VERSION );
+			wp_enqueue_script( $this->plugin_slug . '-admin-script', plugins_url( 'assets/js/admin.js', __FILE__ ), array( 'jquery' ), Bike_Index_Sync::VERSION );
 		}
 
 	}
@@ -227,54 +227,52 @@ class Bike_Index_Widget_Admin {
 		// @TODO: Define your filter hook callback here
 	}
 
-	public function bikeindex_settings_init()
+	public function bikeindex_sync_settings_init()
 	{
-		register_setting( 'bikeindex-widget-settings-group', 'bike-index-settings', array( $this, 'bike-index_settings_validate' ));
-		add_settings_section('bike-index-settings-section-one', 'API Connection Settings', array( $this, 'bike-index_settings_text_general'), 'bike-index-settings');
-		
-		//add_settings_field('api_key', 'API Key', array( $this, 'bike-index_settings_api_key'), 'bike-index-settings', 'bike-index-settings-section-one');
-		//add_settings_field('api_secret', 'API Secret', array( $this, 'bike-index_settings_api_secret'), 'bike-index-settings', 'bike-index-settings-section-one');
+		register_setting( 'bike-index-sync-settings-group', 'bike-index-sync-settings', array( $this, 'bike_index_sync_settings_validate' ));
+		add_settings_section('bike-index-sync-settings-section-one', 'API Connection Settings', array( $this, 'bike_index_sync_settings_text_general'), 'bike-index-sync-settings');
+
+		add_settings_field('api_key', 'API Key', array( $this, 'bike_index_settings_api_key'), 'bike-index-sync-settings', 'bike-index-sync-settings-section-one');
+		add_settings_field('api_secret', 'Organization ID', array( $this, 'bike_index_settings_org_key'), 'bike-index-sync-settings', 'bike-index-sync-settings-section-one');
+		add_settings_field('sync_interval', 'Sync Interval (Minutes)', array( $this, 'bike_index_settings_sync_interval'), 'bike-index-sync-settings', 'bike-index-sync-settings-section-one');
 	}
 
-	public function bike_index_settings_text_general() {
-		echo '<p>General settings for Bike Index Widget</p>';
+	public function bike_index_sync_settings_text_general() {
+		echo '<p>General settings for Bike Index Sync</p>';
 	}
 
-	public function bike_index_settings_text_metrics() {
-		echo '<p>Choose metrics to show on the WP Dashboard.</p>';
+	public function bike_index_sync_settings_text() {
+		echo '<p>Sync Settings</p>';
 	}
 
-	public function bike_index_settings_text() {
-		echo '<p>Widget Settings</p>';
-	}
-	
-	public function bike_index_settings_radius() {
-		$options = get_option('bike-index-settings');
-		echo "<input id='radius' name='bike-index-settings[radius]' size='40' type='text' value='{$options['radius']}' />";
+	public function bike_index_settings_api_key() {
+		$options = get_option('bike-index-sync-settings');
+		echo "<input id='api_key' name='bike-index-sync-settings[api_key]' size='40' type='text' value='{$options['api_key']}' />";
 	}
 
-	public function bike_index_settings_zipcode() {
-		$options = get_option('bike-index-settings');
-		echo "<input id='zipcode' name='bike-index-settings[zipcode]' size='40' type='text' value='{$options['zipcode']}' />";
+	public function bike_index_settings_org_key() {
+		$options = get_option('bike-index-sync-settings');
+		echo "<input id='organization_id' name='bike-index-sync-settings[organization_id]' size='40' type='text' value='{$options['organization_id']}' />";
 	}
 
-	
+	public function bike_index_settings_sync_interval() {
+		$options = get_option('bike-index-sync-settings');
+		echo "<input id='sync_interval' name='bike-index-sync-settings[sync_interval]' size='40' type='text' value='{$options['sync_interval']}' />";
+	}
+
+
 	/*
 	* Validate bike-index connection credentials with the Service, display warning if not valid.
-	*/	
-	
-	public function bike_index_settings_validate($input) {
+	*/
 
-		if($input['zipcode'] != '' && isset($input['zipcode'])){
-			$this->zipcode = $input['zipcode'];
-		}
-		if($input['radius']!= '' && isset($input['radius'])){
-			$this->radius = $input['radius'];
-		}
-	
+	public function bike_index_sync_settings_validate($input) {
+
+			$this->api_key = $input['api_key'];
+			$this->organization_id = $input['organization_id'];
+
+
 		//Force reload
-		$this->bike-index_force_subscription_refresh();
-	
+
 		return $input;
 	}
 
