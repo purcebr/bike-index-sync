@@ -74,13 +74,78 @@ class Bike_Index_Sync {
 		// Load public-facing style sheet and JavaScript.
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_styles' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
-
+		add_filter( 'the_content', array( $this, 'single_bike_content' ) );
+		add_shortcode( 'bike_table', array( $this, 'show_bike_table'));
 		/* Define custom functionality.
 		 * Refer To http://codex.wordpress.org/Plugin_API#Hooks.2C_Actions_and_Filters
 		 */
-		add_action( '@TODO', array( $this, 'action_method_name' ) );
-		add_filter( '@TODO', array( $this, 'filter_method_name' ) );
+		
+		add_action( 'init', array( $this, 'register_types' ) );
+		//add_action('after_setup_theme', array($this, 'cron_test'));
+		$this->api = new BikeIndexAPI();
+	}
 
+	public function cron_test() {
+		$options = get_option('bike-index-sync-settings');
+
+		$data = array("proximity" => '60647', "proximity_radius" => '100', "stolen" => 1);
+		$action = 'bikes';
+		$req = $this->api->post_json($data, $action);
+		$bikes_response = json_decode($req);
+		$bikes = $bikes_response->bikes;
+
+		foreach($bikes as $bike) {
+			global $wpdb;
+
+			if(isset($bike->id)) {
+				$bike_index_id = $bike->id;
+				$sql = "SELECT * FROM wp_postmeta WHERE meta_value = '" . $bike_index_id . "' AND meta_key = 'bike_id'";
+				$results = $wpdb->get_results($sql);
+
+				if(isset($results[0])) {
+					$first_result = $results[0];
+					$local_post_id = $first_result->post_id;
+					$first_result = $results[0];
+				}
+				else {
+					$local_post_id = '';
+				}
+
+				if($local_post_id == '') {
+					// Create post object
+					$bike_args = array(
+					  'post_title'    => $bike->name,
+					  'post_content'  => $bike->description,
+					  'post_type'	  => "bikeindex_bike",
+					  'post_status'   => 'publish',
+					  'post_author'   => 1,
+					);
+
+					// Insert the post into the database
+					$local_post_id = wp_insert_post( $bike_args );
+				} else {
+
+					$bike_args = array(
+					  'ID' => $local_post_id,
+					  'post_title'    => $bike->name,
+					  'post_content'  => $bike->description,
+					  'post_type'	  => "bikeindex_bike",
+					  'post_status'   => 'publish',
+					  'post_author'   => 1,
+					);
+
+					// Update the post in the database
+					wp_update_post( $bike_args );
+				}
+				if($local_post_id != "") {
+					foreach($bike as $key => $value) {
+					 	//if($key == 'id'){
+					 	 	update_post_meta($local_post_id, "bike_" . $key, $value);
+					 	//}
+					}
+			 	}
+			}
+		}
 	}
 
 	/**
@@ -186,6 +251,29 @@ class Bike_Index_Sync {
 
 	}
 
+	public function register_types( ) {
+
+		register_post_type('bikeindex_bike', array(
+		  'labels' => array(
+		    'name' => 'Bikes',
+		    'singular_name' => 'Bike',
+		    'add_new_item' => 'Add New Bike',
+		    'edit_item' => 'Edit Bike',
+		    'new_item' => 'New Bike',
+		    'view_item' => 'View Bike',
+		    'search_items' => 'Search Bikes',
+		    'not_found' => 'No Bikes found',
+		    'not_found_in_trash' => 'No Bikes found in Trash',
+		    'view' => 'Bike'
+		  ),
+		  'has_archive' => false, 
+		  'supports' => array( 'title','editor','custom-fields' ),
+		  'exclude_from_search' => true,
+		  'public' => true,
+		));
+		register_taxonomy_for_object_type( 'category', 'beer' );
+
+	}
 	/**
 	 * Fired when a new site is activated with a WPMU environment.
 	 *
@@ -234,7 +322,8 @@ class Bike_Index_Sync {
 	 * @since    1.0.0
 	 */
 	private static function single_activate() {
-		// @TODO: Define activation functionality here
+		$background = Bike_Index_Sync_Background::get_instance();
+		$background->activate_schedule();
 	}
 
 	/**
@@ -301,8 +390,24 @@ class Bike_Index_Sync {
 	 *
 	 * @since    1.0.0
 	 */
-	public function filter_method_name() {
-		// @TODO: Define your filter hook callback here
+	public function single_bike_content($content) {
+		global $post;
+		if ($post->post_type == 'bikeindex_bike' && is_single()) {
+			ob_start();
+			include('views/single-bike.php');
+			$bike_content = ob_get_contents();
+			ob_end_clean();
+			return $bike_content;
+		}
+  		// otherwise returns the database content
+  		return $content;
+	}
+	public function show_bike_table() {
+		ob_start();
+		include('views/archive-table.php');
+		$bike_table_content = ob_get_contents();
+		ob_end_clean();
+		return $bike_table_content;
 	}
 
 }

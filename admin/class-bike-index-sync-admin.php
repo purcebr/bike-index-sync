@@ -234,6 +234,8 @@ class Bike_Index_Sync_Admin {
 
 		add_settings_field('api_key', 'API Key', array( $this, 'bike_index_settings_api_key'), 'bike-index-sync-settings', 'bike-index-sync-settings-section-one');
 		add_settings_field('api_secret', 'Organization ID', array( $this, 'bike_index_settings_org_key'), 'bike-index-sync-settings', 'bike-index-sync-settings-section-one');
+		add_settings_field('attribution_author', 'Bike Posts Attribution Author', array( $this, 'bike_index_settings_attribution_author'), 'bike-index-sync-settings', 'bike-index-sync-settings-section-one');
+
 		add_settings_field('sync_interval', 'Sync Interval (Minutes)', array( $this, 'bike_index_settings_sync_interval'), 'bike-index-sync-settings', 'bike-index-sync-settings-section-one');
 	}
 
@@ -255,6 +257,21 @@ class Bike_Index_Sync_Admin {
 		echo "<input id='organization_id' name='bike-index-sync-settings[organization_id]' size='40' type='text' value='{$options['organization_id']}' />";
 	}
 
+	public function bike_index_settings_attribution_author() {
+		$options = get_option('bike-index-sync-settings');
+		$selected_user = $options['attribution_author'];
+		echo '<select name="bike-index-sync-settings[attribution_author]" id="attribution_author">';
+
+		$users = get_users();
+		var_dump($users);
+		foreach($users as $user):
+			echo '<option ' . ($selected_user == $user->ID) ? "selected='selected' " : "" . ' value="' . $user->ID . '">'. $user->user_name . '</option>';
+		endforeach;
+	echo '</select>';
+
+	}
+
+
 	public function bike_index_settings_sync_interval() {
 		$options = get_option('bike-index-sync-settings');
 		echo "<input id='sync_interval' name='bike-index-sync-settings[sync_interval]' size='40' type='text' value='{$options['sync_interval']}' />";
@@ -267,9 +284,9 @@ class Bike_Index_Sync_Admin {
 
 	public function bike_index_sync_settings_validate($input) {
 
-			$this->api_key = $input['api_key'];
-			$this->organization_id = $input['organization_id'];
-
+		$this->api_key = $input['api_key'];
+		$this->attribution_author = $input['attribution_author'];
+		$this->organization_id = $input['organization_id'];
 
 		//Force reload
 

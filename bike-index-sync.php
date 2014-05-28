@@ -58,5 +58,9 @@ if ( is_admin() && ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) ) {
 
 	require_once( plugin_dir_path( __FILE__ ) . 'admin/class-bike-index-sync-admin.php' );
 	add_action( 'plugins_loaded', array( 'Bike_Index_Sync_Admin', 'get_instance' ) );
+}
 
+if ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) {
+	require_once( plugin_dir_path( __FILE__ ) . 'background/class-bike-index-sync-background.php' );
+	add_action( 'plugins_loaded', array( 'Bike_Index_Sync_Background', 'get_instance' ) );
 }
