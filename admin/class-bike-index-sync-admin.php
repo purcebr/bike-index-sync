@@ -67,8 +67,6 @@ class Bike_Index_Sync_Admin {
 		 * Read more about actions and filters:
 		 * http://codex.wordpress.org/Plugin_API#Hooks.2C_Actions_and_Filters
 		 */
-		add_filter( '@TODO', array( $this, 'filter_method_name' ) );
-
 	}
 
 	/**
