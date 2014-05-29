@@ -235,6 +235,8 @@ class Bike_Index_Sync_Admin {
 		add_settings_field('attribution_author', 'Bike Posts Attribution Author', array( $this, 'bike_index_settings_attribution_author'), 'bike-index-sync-settings', 'bike-index-sync-settings-section-one');
 
 		add_settings_field('sync_records', 'Sync Records Per Interval (One Hour)', array( $this, 'bike_index_settings_sync_records'), 'bike-index-sync-settings', 'bike-index-sync-settings-section-one');
+		add_settings_field('manual_update?', 'Update the listing now?', array( $this, 'bike_index_settings_manual_update'), 'bike-index-sync-settings', 'bike-index-sync-settings-section-one');
+
 	}
 
 	public function bike_index_sync_settings_text_general() {
@@ -272,6 +274,11 @@ class Bike_Index_Sync_Admin {
 		echo "<input id='sync_records' name='bike-index-sync-settings[sync_records]' size='40' type='text' value='{$options['sync_records']}' />";
 	}
 
+	public function bike_index_settings_manual_update() {
+		$options = get_option('bike-index-sync-settings');
+		echo "<input id='manual_update' name='bike-index-sync-settings[manual_update]' size='40' type='text' value='' />";
+	}
+
 
 	/*
 	* Validate bike-index connection credentials with the Service, display warning if not valid.
@@ -282,8 +289,14 @@ class Bike_Index_Sync_Admin {
 		$this->api_key = $input['api_key'];
 		$this->attribution_author = $input['attribution_author'];
 		$this->organization_id = $input['organization_id'];
+		$this->manual_update = '';
 
-		//Force reload
+		if(isset($input['manual_update']) && $input['manual_update'] != "")
+		{
+			update_option('bikeindex_sync_last_updated', false); //Load it manually
+			$instance = Bike_Index_Sync_Background::get_instance();
+			$instance->prefix_do_this_hourly();
+		}
 
 		return $input;
 	}
