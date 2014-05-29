@@ -236,7 +236,7 @@ class Bike_Index_Sync_Admin {
 		add_settings_field('api_secret', 'Organization ID', array( $this, 'bike_index_settings_org_key'), 'bike-index-sync-settings', 'bike-index-sync-settings-section-one');
 		add_settings_field('attribution_author', 'Bike Posts Attribution Author', array( $this, 'bike_index_settings_attribution_author'), 'bike-index-sync-settings', 'bike-index-sync-settings-section-one');
 
-		add_settings_field('sync_interval', 'Sync Interval (Minutes)', array( $this, 'bike_index_settings_sync_interval'), 'bike-index-sync-settings', 'bike-index-sync-settings-section-one');
+		add_settings_field('sync_records', 'Sync Records Per Interval (One Hour)', array( $this, 'bike_index_settings_sync_records'), 'bike-index-sync-settings', 'bike-index-sync-settings-section-one');
 	}
 
 	public function bike_index_sync_settings_text_general() {
@@ -259,22 +259,19 @@ class Bike_Index_Sync_Admin {
 
 	public function bike_index_settings_attribution_author() {
 		$options = get_option('bike-index-sync-settings');
-		$selected_user = $options['attribution_author'];
-		echo '<select name="bike-index-sync-settings[attribution_author]" id="attribution_author">';
+		if(isset($options['attribution_author']))
+			$selected_user = $options['attribution_author'];
+		else
+			$selected_user = false;
 
-		$users = get_users();
-		var_dump($users);
-		foreach($users as $user):
-			echo '<option ' . ($selected_user == $user->ID) ? "selected='selected' " : "" . ' value="' . $user->ID . '">'. $user->user_name . '</option>';
-		endforeach;
-	echo '</select>';
+		wp_dropdown_users(array('name' => 'bike-index-sync-settings[attribution_author]', 'selected' => $selected_user));
 
 	}
 
 
-	public function bike_index_settings_sync_interval() {
+	public function bike_index_settings_sync_records() {
 		$options = get_option('bike-index-sync-settings');
-		echo "<input id='sync_interval' name='bike-index-sync-settings[sync_interval]' size='40' type='text' value='{$options['sync_interval']}' />";
+		echo "<input id='sync_records' name='bike-index-sync-settings[sync_records]' size='40' type='text' value='{$options['sync_records']}' />";
 	}
 
 

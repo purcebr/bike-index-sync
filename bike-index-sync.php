@@ -33,7 +33,7 @@ if ( ! defined( 'WPINC' ) ) {
 /*----------------------------------------------------------------------------*
  * Public-Facing Functionality
  *----------------------------------------------------------------------------*/
-
+require_once( plugin_dir_path( __FILE__ ) . 'includes/api.class.php' );
 require_once( plugin_dir_path( __FILE__ ) . 'public/class-bike-index-sync.php' );
 
 /*

@@ -27,7 +27,6 @@
 <tr class="bike-row-odd">
 <td align="left" valign="top"><b><a href="/stolenbikes&amp;sort=stolen&amp;descend=1">stolen</a></b></td>
 <td align="left" valign="top"><b><a href="/stolenbikes&amp;sort=model&amp;descend=1">model</a> / <a href="/stolenbikes&amp;sort=color&amp;descend=1">color</a></b></td>
-<td align="left" valign="top"><b><a href="/stolenbikes&amp;sort=city&amp;descend=1">city</a>/<a href="/stolenbikes&amp;sort=state&amp;descend=1">state</a>/<a href="/stolenbikes&amp;sort=zip&amp;descend=1">zip</a></b></td>
 <td align="left" valign="top"><b>summary</b></td>
 </tr>
 

@@ -72,10 +72,6 @@ function prefix_do_this_hourly() {
 	// 		$action = 'was_updated';
 	// 		$req = $this->api->post_json($data, $action);
 
-			
-
-			error_log('fired');
-
 }
 
 
