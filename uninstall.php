@@ -3,10 +3,10 @@
  * Fired when the plugin is uninstalled.
  *
  * @package   Bike_Index_Widget
- * @author    Your Name <email@example.com>
+ * @author    Bryan Purcell <purcebr@gmail.com>
  * @license   GPL-2.0+
- * @link      http://example.com
- * @copyright 2014 Your Name or Company Name
+ * @link      http://bikeindex.org
+ * @copyright 2014 Bryan Purcell or Company Name
  */
 
 // If uninstall not called from WordPress, then exit

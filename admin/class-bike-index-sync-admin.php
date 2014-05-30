@@ -1,18 +1,18 @@
 <?php
 /**
- * Plugin Name.
+ * Bike Index WP Sync
  *
  * @package   Bike_Index_Sync_Admin
- * @author    Your Name <email@example.com>
+ * @author    Bryan Purcell <purcebr@gmail.com>
  * @license   GPL-2.0+
- * @link      http://example.com
- * @copyright 2014 Your Name or Company Name
+ * @link      http://bikeindex.org
+ * @copyright 2014 Bryan Purcell or Company Name
  */
 
 /**
  *
  * @package Bike_Index_Sync_Admin
- * @author  Your Name <email@example.com>
+ * @author  Bryan Purcell <purcebr@gmail.com>
  */
 class Bike_Index_Sync_Admin {
 
@@ -60,13 +60,6 @@ class Bike_Index_Sync_Admin {
 		// Add an action link pointing to the options page.
 		$plugin_basename = plugin_basename( plugin_dir_path( realpath( dirname( __FILE__ ) ) ) . $this->plugin_slug . '.php' );
 		add_filter( 'plugin_action_links_' . $plugin_basename, array( $this, 'add_action_links' ) );
-
-		/*
-		 * Define custom functionality.
-		 *
-		 * Read more about actions and filters:
-		 * http://codex.wordpress.org/Plugin_API#Hooks.2C_Actions_and_Filters
-		 */
 	}
 
 	/**
@@ -78,15 +71,6 @@ class Bike_Index_Sync_Admin {
 	 */
 	public static function get_instance() {
 
-		/*
-		 * @TODO :
-		 *
-		 * - Uncomment following lines if the admin class should only be available for super admins
-		 */
-		/* if( ! is_super_admin() ) {
-			return;
-		} */
-
 		// If the single instance hasn't been set, set it now.
 		if ( null == self::$instance ) {
 			self::$instance = new self;
@@ -97,10 +81,6 @@ class Bike_Index_Sync_Admin {
 
 	/**
 	 * Register and enqueue admin-specific style sheet.
-	 *
-	 * @TODO:
-	 *
-	 * - Rename "Bike_Index_Sync" to the name your plugin
 	 *
 	 * @since     1.0.0
 	 *
@@ -121,10 +101,6 @@ class Bike_Index_Sync_Admin {
 
 	/**
 	 * Register and enqueue admin-specific JavaScript.
-	 *
-	 * @TODO:
-	 *
-	 * - Rename "Bike_Index_Sync" to the name your plugin
 	 *
 	 * @since     1.0.0
 	 *
@@ -156,17 +132,10 @@ class Bike_Index_Sync_Admin {
 		 * NOTE:  Alternative menu locations are available via WordPress administration menu functions.
 		 *
 		 *        Administration Menus: http://codex.wordpress.org/Administration_Menus
-		 *
-		 * @TODO:
-		 *
-		 * - Change 'Page Title' to the title of your plugin admin page
-		 * - Change 'Menu Text' to the text for menu item for the plugin settings page
-		 * - Change 'manage_options' to the capability you see fit
-		 *   For reference: http://codex.wordpress.org/Roles_and_Capabilities
 		 */
 		$this->plugin_screen_hook_suffix = add_options_page(
-			__( 'Bike Index Widget Settings', $this->plugin_slug ),
-			__( 'Bike Index Widget Settings', $this->plugin_slug ),
+			__( 'Bike Index Sync Settings', $this->plugin_slug ),
+			__( 'Bike Index Sync Settings', $this->plugin_slug ),
 			'manage_options',
 			$this->plugin_slug,
 			array( $this, 'display_plugin_admin_page' )
@@ -196,34 +165,12 @@ class Bike_Index_Sync_Admin {
 			),
 			$links
 		);
-
 	}
 
 	/**
-	 * NOTE:     Actions are points in the execution of a page or process
-	 *           lifecycle that WordPress fires.
-	 *
-	 *           Actions:    http://codex.wordpress.org/Plugin_API#Actions
-	 *           Reference:  http://codex.wordpress.org/Plugin_API/Action_Reference
 	 *
 	 * @since    1.0.0
 	 */
-	public function action_method_name() {
-		// @TODO: Define your action hook callback here
-	}
-
-	/**
-	 * NOTE:     Filters are points of execution in which WordPress modifies data
-	 *           before saving it or sending it to the browser.
-	 *
-	 *           Filters: http://codex.wordpress.org/Plugin_API#Filters
-	 *           Reference:  http://codex.wordpress.org/Plugin_API/Filter_Reference
-	 *
-	 * @since    1.0.0
-	 */
-	public function filter_method_name() {
-		// @TODO: Define your filter hook callback here
-	}
 
 	public function bikeindex_sync_settings_init()
 	{
@@ -276,7 +223,7 @@ class Bike_Index_Sync_Admin {
 
 	public function bike_index_settings_manual_update() {
 		$options = get_option('bike-index-sync-settings');
-		echo "<input id='manual_update' name='bike-index-sync-settings[manual_update]' size='40' type='text' value='' />";
+		echo '<input type="checkbox" name="bike-index-sync-settings[manual_update]" value="Yes"/>';
 	}
 
 

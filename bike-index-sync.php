@@ -7,7 +7,7 @@
  * @package   Bike_Index_Sync
  * @author    Bryan Purcell <purcebr@gmail.com>
  * @license   GPL-2.0+
- * @link      http://example.com
+ * @link      http://bikeindex.org
  * @copyright 2014 Bryan Purcell
  *
  * @bike-index-widget
@@ -49,11 +49,6 @@ add_action( 'plugins_loaded', array( 'Bike_Index_Sync', 'get_instance' ) );
  * Dashboard and Administrative Functionality
  *----------------------------------------------------------------------------*/
 
-/*
- * if ( is_admin() ) {
- *   ...
- * }
- */
 if ( is_admin() && ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) ) {
 
 	require_once( plugin_dir_path( __FILE__ ) . 'admin/class-bike-index-sync-admin.php' );
