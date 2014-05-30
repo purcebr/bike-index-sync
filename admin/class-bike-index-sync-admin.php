@@ -182,8 +182,7 @@ class Bike_Index_Sync_Admin {
 		add_settings_field('attribution_author', 'Bike Posts Attribution Author', array( $this, 'bike_index_settings_attribution_author'), 'bike-index-sync-settings', 'bike-index-sync-settings-section-one');
 
 		add_settings_field('sync_records', 'Sync Records Per Interval (One Hour)', array( $this, 'bike_index_settings_sync_records'), 'bike-index-sync-settings', 'bike-index-sync-settings-section-one');
-		add_settings_field('manual_update?', 'Update the listing now?', array( $this, 'bike_index_settings_manual_update'), 'bike-index-sync-settings', 'bike-index-sync-settings-section-one');
-
+		add_settings_field('manual_update', 'Update the listing now?', array( $this, 'bike_index_settings_manual_update'), 'bike-index-sync-settings', 'bike-index-sync-settings-section-one');
 	}
 
 	public function bike_index_sync_settings_text_general() {

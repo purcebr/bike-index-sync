@@ -51,18 +51,16 @@
 
 <h3>Theft Details</h3>
 
-<?php $stolen_record = unserialize(get_post_meta($post->ID, 'bike_stolen_record',true)); ?>
-
-<?php if($stolen_record->latitude != "" && $stolen_record->longitude != ""): ?>
-	<img src="https://maps-api-ssl.google.com/maps/api/staticmap?center=<?php echo $stolen_record->latitude; ?>,<?php echo $stolen_record->longitude; ?>&amp;zoom=15&amp;size=640x480&amp;markers=<?php echo $stolen_record->latitude; ?>,<?php echo $stolen_record->longitude; ?>&amp;maptype=roadmap&amp;sensor=false&amp;scale=1">
+<?php if(get_post_meta($post->ID, 'bike_stolen_record_theft_longitude', true) != "" && get_post_meta($post->ID, 'bike_stolen_record_theft_latitude', true) != ""): ?>
+	<img src="https://maps-api-ssl.google.com/maps/api/staticmap?center=<?php echo get_post_meta($post->ID, 'bike_stolen_record_latitude', true); ?>,<?php echo get_post_meta($post->ID, 'bike_stolen_record_longitude', true); ?>&amp;zoom=15&amp;size=640x480&amp;markers=<?php echo get_post_meta($post->ID, 'bike_stolen_record_latitude', true); ?>,<?php echo get_post_meta($post->ID, 'bike_stolen_record_longitude', true); ?>&amp;maptype=roadmap&amp;sensor=false&amp;scale=1">
 <?php endif; ?>
 
 <div class="dl-horizontal">
-	<dt>Locking description</dt><dd><?php echo ($stolen_record->locking_description != "") ? $stolen_record->locking_description : "Not Available"; ?></dd>
-	<dt>Locking circumvented</dt><dd><?php echo ($stolen_record->theft_description != "") ? $stolen_record->theft_description : "Not Available"; ?></dd>
-	<dt>Date stolen</dt><dd><?php echo ($stolen_record->date_stolen != "") ? $stolen_record->date_stolen : "Not Available"; ?></dd>
-	<dt>Police report #</dt><dd><?php echo ($stolen_record->police_report_number != "") ? $stolen_record->police_report_number : "Not Available"; ?></dd>
-	<dt>Department &amp; city</dt><dd><?php echo ($stolen_record->police_report_department != "") ? $stolen_record->police_report_department : "Not Available"; ?></dd>
+	<dt>Locking description</dt><dd><?php echo (get_post_meta($post->ID, 'bike_stolen_record_locking_description', true) != "") ? get_post_meta($post->ID, 'bike_stolen_record_locking_description', true) : "Not Available"; ?></dd>
+	<dt>Locking circumvented</dt><dd><?php echo (get_post_meta($post->ID, 'bike_stolen_record_theft_description', true)) ? get_post_meta($post->ID, 'bike_stolen_record_theft_description', true) : "Not Available"; ?></dd>
+	<dt>Date stolen</dt><dd><?php echo (get_post_meta($post->ID, 'bike_stolen_record_date_stolen', true) != "") ? $this->bikeindex_formatted_date(get_post_meta($post->ID, 'bike_stolen_record_date_stolen', true)) : "Not Available"; ?></dd>
+	<dt>Police report #</dt><dd><?php echo (get_post_meta($post->ID, 'bike_stolen_record_police_report_number', true) != "") ? get_post_meta($post->ID, 'bike_stolen_record_police_report_number', true) : "Not Available"; ?></dd>
+	<dt>Department &amp; city</dt><dd><?php echo (get_post_meta($post->ID, 'bike_stolen_record_police_report_department', true) != "") ? get_post_meta($post->ID, 'bike_stolen_record_police_report_department', true) : "Not Available"; ?></dd>
 </div>
 
 <a href="<?php echo get_post_meta($post->ID, 'bike_url', true); ?>" class="btn">Check it out on the Bike Index</a>

@@ -3,10 +3,10 @@
  * Plugin Name.
  *
  * @package   Bike_Index_Sync
- * @author    Your Name <email@example.com>
+ * @author    Bryan Purcell <purcebr@gmail.com>
  * @license   GPL-2.0+
- * @link      http://example.com
- * @copyright 2014 Your Name or Company Name
+ * @link      http://bikeindex.org
+ * @copyright 2014 Bryan Purcell or Company Name
  */
 
 /**
@@ -19,7 +19,7 @@
  * @TODO: Rename this class to a proper name for your plugin.
  *
  * @package Bike_Index_Sync
- * @author  Your Name <email@example.com>
+ * @author  Bryan Purcell <purcebr@gmail.com>
  */
 class Bike_Index_Sync {
 
@@ -349,5 +349,22 @@ class Bike_Index_Sync {
 		ob_end_clean();
 		return $bike_table_content;
 	}
+	public function bikeindex_formatted_date($datetime) {
+	if(isset($datetime)) {
+		$date_data = explode("T", $datetime);
+		$date = new DateTime($date_data[0]);
+		return $date->format("Y.m.d");
+	}
+	return "";
+}
 
+}
+
+function bikeindex_convert_date_to_timestamp($datetime) {
+	if(isset($date)) {
+		$date_data = explode("T", $date);
+		$timestamp = new DateTime($date_date[0]);
+		return $timestamp;
+	}
+	return false;
 }
