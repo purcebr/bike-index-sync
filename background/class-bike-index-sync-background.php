@@ -218,6 +218,7 @@ class Bike_Index_Sync_Background {
 			return;
 
 		$last_updated_timestamp = get_option('bikeindex_sync_last_updated');
+		
 		if(isset($last_updated_timestamp) && $last_updated_timestamp !=false) {
 			$last_updated_date_string = date("Y-m-d", $last_updated_timestamp);
 			$last_update_time_string = date("H:i:s-P", $last_updated_timestamp);
