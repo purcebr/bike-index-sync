@@ -239,7 +239,7 @@ class Bike_Index_Sync_Admin {
 
 		if(isset($input['manual_update']) && $input['manual_update'] != "")
 		{
-			update_option('bikeindex_sync_last_updated', false); //Load it manually
+			update_option('bikeindex_last_synced', false); //Load it manually
 			update_option('bikeindex_sync_queue', ''); //Load it manually
 
 			$instance = Bike_Index_Sync_Background::get_instance();

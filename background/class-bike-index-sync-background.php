@@ -66,8 +66,9 @@ class Bike_Index_Sync_Background {
 	 * On the scheduled action hook, run a function.
 	 */
 	function prefix_do_this_hourly() {
+		
 		// do something every hour
-		$last_synced = get_option("bikeindex_last_synced");
+		$last_synced = get_option("bikeindex_sync_last_updated");
 		$options = get_option("bike-index-sync-settings");
 
 		if(isset($options['sync_records']) && $options['sync_records'] > 0){
@@ -235,6 +236,7 @@ class Bike_Index_Sync_Background {
 			"stolen" => 1,
 			"updated_since" => $last_update_formatted
 		);
+
 		$action = 'bikes/stolen_ids';
 		$req = $this->api->post_json($data, $action);
 		$bikes_response = json_decode($req['body']);
