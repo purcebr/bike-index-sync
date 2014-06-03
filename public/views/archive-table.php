@@ -19,12 +19,12 @@
         "bike_manufacturer_name"  => true,
       );
 
-      if(isset($_GET['orderby']) && $allowed_sort_meta_keys[$_GET['orderby']] == true) {
-        $args['orderby'] = $_GET['orderby'];
+      if(isset($_GET['bike_orderby']) && $allowed_sort_meta_keys[$_GET['bike_orderby']] == true) {
+        $args['orderby'] = $_GET['bike_orderby'];
       }
 
-      if(isset($_GET['order']) && ($_GET['order'] == 'desc' || $_GET['order'] == 'asc')) {
-        $args['order'] = strtoupper($_GET['order']);
+      if(isset($_GET['bike_order']) && ($_GET['bike_order'] == 'desc' || $_GET['bike_order'] == 'asc')) {
+        $args['order'] = strtoupper($_GET['bike_order']);
       }
 
       /* make a new query for the events */
