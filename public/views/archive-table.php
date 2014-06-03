@@ -13,6 +13,20 @@
 
      );
 
+      $allowed_sort_meta_keys = array(
+        "bike_stolen_record_date_stolen" => true,
+        "bike_frame_model"  => true,
+        "bike_manufacturer_name"  => true,
+      );
+
+      if(isset($_GET['orderby']) && $allowed_sort_meta_keys[$_GET['orderby']] == true) {
+        $args['orderby'] = $_GET['orderby'];
+      }
+
+      if(isset($_GET['order']) && ($_GET['order'] == 'desc' || $_GET['order'] == 'asc')) {
+        $args['order'] = strtoupper($_GET['order']);
+      }
+
       /* make a new query for the events */
 
       $wp_query = new WP_Query( $args );
@@ -25,8 +39,8 @@
 <tbody>
 
 <tr class="bike-row-odd">
-<td align="left" valign="top"><b><a href="/stolenbikes&amp;sort=stolen&amp;descend=1">stolen</a></b></td>
-<td align="left" valign="top"><b><a href="/stolenbikes&amp;sort=model&amp;descend=1">model</a> / <a href="/stolenbikes&amp;sort=color&amp;descend=1">color</a></b></td>
+<td align="left" valign="top"><b><a href="?orderby=bike_stolen_record_date_stolen&amp;order=<?php echo (isset($_GET['orderby']) && $_GET['orderby'] == 'bike_stolen_record_date_stolen' && isset($_GET['order']) && $_GET['order'] =='desc') ? 'asc' : 'desc'; ?>">stolen date</a></b></td>
+<td align="left" valign="top"><b><a href="?orderby=bike_frame_model&amp;order=<?php echo (isset($_GET['orderby']) && $_GET['orderby'] == 'bike_frame_model' && isset($_GET['order']) && $_GET['order'] =='desc') ? 'asc' : 'desc'; ?>">model</a> / <a href="?orderby=bike_manufacturer_name&amp;order=<?php echo ($_GET['orderby'] =='bike_manufacturer_name' && isset($_GET['orderby']) && $_GET['order'] =='desc' && isset($_GET['order'])) ? 'asc' : 'desc'; ?>">manufacturer name</a></b></td>
 <td align="left" valign="top"><b>summary</b></td>
 </tr>
 

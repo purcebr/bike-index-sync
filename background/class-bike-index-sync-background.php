@@ -66,7 +66,7 @@ class Bike_Index_Sync_Background {
 	 * On the scheduled action hook, run a function.
 	 */
 	function prefix_do_this_hourly() {
-		
+
 		// do something every hour
 		$last_synced = get_option("bikeindex_sync_last_updated");
 		$options = get_option("bike-index-sync-settings");
@@ -220,21 +220,15 @@ class Bike_Index_Sync_Background {
 
 		$last_updated_timestamp = get_option('bikeindex_sync_last_updated');
 		
-		if(isset($last_updated_timestamp) && $last_updated_timestamp !=false) {
-			$last_updated_date_string = date("Y-m-d", $last_updated_timestamp);
-			$last_update_time_string = date("H:i:s-P", $last_updated_timestamp);
-			$last_update_formatted = $last_updated_date_string . "T" . $last_update_time_string;
-		}
-		else
-		{
-			$last_update_formatted = "1999-05-24T01:00:00-05:00"; //in the past... Willenium.
+		if(!isset($last_updated_timestamp) || $last_updated_timestamp == false) {
+			$last_updated_timestamp = "915148800"; //in the past... Willenium.
 		}
 
 		$data = array(
 			"organization_slug" => $options['organization_id'],
 			"access_token" => $options['api_key'],
 			"stolen" => 1,
-			"updated_since" => $last_update_formatted
+			"updated_since" => $last_updated_timestamp
 		);
 
 		$action = 'bikes/stolen_ids';
