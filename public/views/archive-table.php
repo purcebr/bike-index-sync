@@ -19,8 +19,9 @@
         "bike_manufacturer_name"  => true,
       );
 
-      if(isset($_GET['bike_orderby']) && $allowed_sort_meta_keys[$_GET['bike_orderby']] == true) {
-        $args['orderby'] = $_GET['bike_orderby'];
+      if(isset($_GET['bike_orderby']) && $allowed_sort_meta_keys[$_GET['bike_orderby']]) {
+        $args['orderby'] = 'meta_value';
+        $args['meta_key'] = $_GET['bike_orderby'];
       }
 
       if(isset($_GET['bike_order']) && ($_GET['bike_order'] == 'desc' || $_GET['bike_order'] == 'asc')) {
