@@ -59,3 +59,12 @@ if ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) {
 	require_once( plugin_dir_path( __FILE__ ) . 'background/class-bike-index-sync-background.php' );
 	add_action( 'plugins_loaded', array( 'Bike_Index_Sync_Background', 'get_instance' ) );
 }
+
+function bikeindex_convert_date_to_timestamp($datetime) {
+	if(isset($date)) {
+		$date_data = explode("T", $date);
+		$timestamp = new DateTime($date_date[0]);
+		return $timestamp;
+	}
+	return false;
+}

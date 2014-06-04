@@ -75,7 +75,10 @@ class Bike_Index_Sync {
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_styles' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 		add_filter( 'the_content', array( $this, 'single_bike_content' ) );
+
 		add_shortcode( 'bike_table', array( $this, 'show_bike_table'));
+		add_shortcode( 'bike_submit_form', array( $this, 'show_bike_submit_form'));
+
 		/* Define custom functionality.
 		 * Refer To http://codex.wordpress.org/Plugin_API#Hooks.2C_Actions_and_Filters
 		 */
@@ -350,21 +353,19 @@ class Bike_Index_Sync {
 		return $bike_table_content;
 	}
 	public function bikeindex_formatted_date($datetime) {
-	if(isset($datetime)) {
-		$date_data = explode("T", $datetime);
-		$date = new DateTime($date_data[0]);
-		return $date->format("Y.m.d");
+		if(isset($datetime)) {
+			$date_data = explode("T", $datetime);
+			$date = new DateTime($date_data[0]);
+			return $date->format("Y.m.d");
+		}
+		return "";
 	}
-	return "";
-}
 
-}
-
-function bikeindex_convert_date_to_timestamp($datetime) {
-	if(isset($date)) {
-		$date_data = explode("T", $date);
-		$timestamp = new DateTime($date_date[0]);
-		return $timestamp;
+	public function show_bike_submit_form() {
+		ob_start();
+		include('views/bike_submit_form.php');
+		$bike_form_content = ob_get_contents();
+		ob_end_clean();
+		return $bike_form_content;
 	}
-	return false;
 }
