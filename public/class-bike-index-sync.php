@@ -211,7 +211,7 @@ class Bike_Index_Sync {
 		  ),
 		  'has_archive' => false, 
 		  'supports' => array( 'title','editor','custom-fields' ),
-		  'exclude_from_search' => true,
+		  'exclude_from_search' => false,
 		  'public' => true,
 		));
 		register_taxonomy_for_object_type( 'category', 'beer' );
