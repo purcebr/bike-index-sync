@@ -7,14 +7,11 @@
 		<?php if(isset($bike_frame_model) && $bike_frame_model != ''): ?>
 		<?php echo $bike_frame_model; ?></a>
 		<?php endif; ?>
+	</td>
+	<td align="left" valign="top"><a style="text-decoration: none;" href="<?php echo get_permalink(); ?>">
 		<?php $bike_manufacturer_name = get_post_meta($post->ID, 'bike_manufacturer_name', true); ?>
-
-		<?php if(isset($bike_frame_model) && $bike_frame_model != '' && isset($bike_manufacturer_name) && $bike_manufacturer_name != ''): ?>
-		<br>
-		<?php endif; ?>
-
 		<?php if(isset($bike_manufacturer_name) && $bike_manufacturer_name != ''): ?>
-			<a style="text-decoration: none;" href="<?php echo get_permalink(); ?>">Manufacturer: <?php echo $bike_manufacturer_name; ?></a></td>
+			<a style="text-decoration: none;" href="<?php echo get_permalink(); ?>"><?php echo $bike_manufacturer_name; ?></a></td>
 		<?php endif; ?>
 	<td align="left" valign="top"><?php echo substr(get_post_meta($post->ID, 'bike_description', true), 0, 100) . '...'; ?></td>
 </tr>
