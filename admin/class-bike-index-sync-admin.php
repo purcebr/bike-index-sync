@@ -232,6 +232,8 @@ class Bike_Index_Sync_Admin {
 
 	public function bike_index_sync_settings_validate($input) {
 
+
+
 		$this->api_key = $input['api_key'];
 		$this->attribution_author = $input['attribution_author'];
 		$this->organization_id = $input['organization_id'];
@@ -239,11 +241,17 @@ class Bike_Index_Sync_Admin {
 
 		if(isset($input['manual_update']) && $input['manual_update'] != "")
 		{
+			global $wpdb;
 			update_option('bikeindex_sync_last_updated', false); //Load it manually
 			update_option('bikeindex_sync_queue', ''); //Load it manually
+			$sql = "SELECT ID FROM " . $wpdb->posts . " WHERE post_type = 'bikeindex_bike'";
+			$results = $wpdb->get_results($sql);
+			
 
-			$instance = Bike_Index_Sync_Background::get_instance();
-			$instance->prefix_do_this_hourly();
+			foreach($results as $bike) {
+				$wpdb->query("DELETE FROM " . $wpdb->posts . " WHERE ID = '" . $bike->ID . "'");
+				$wpdb->query("DELETE FROM " . $wpdb->postmeta . " WHERE post_id = '" . $bike->ID . "'");
+			}
 		}
 
 		return $input;

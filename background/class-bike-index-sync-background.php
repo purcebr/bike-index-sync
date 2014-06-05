@@ -87,6 +87,7 @@ class Bike_Index_Sync_Background {
 			for($i = 0; $i <= $sync_limit; $i++) {
 				$bikes_to_sync[] = array_shift($queue); //shave off the queue into the bikes pending array
 			}
+			$fresh_bikes = false;
 		} else {
 			$bikes = $this->get_bikes_from_endpoint();
 			//If there are more than the allowed number of bikes, queue it up and call this same function. Don't actually start querying the endpoint until the number is less than the allowed sync record limit.
@@ -98,6 +99,7 @@ class Bike_Index_Sync_Background {
 			} else {
 				$bikes_to_sync = $bikes;
 			}
+			$fresh_bikes = true;
 		}
 
 		error_log("Syncing " . sizeof($bikes_to_sync) . " bikes...");
@@ -194,7 +196,8 @@ class Bike_Index_Sync_Background {
 			}
 		}
 		update_option('bikeindex_sync_queue', $queue);
-		update_option('bikeindex_sync_last_updated', time());
+		if($fresh_bikes == true)
+			update_option('bikeindex_sync_last_updated', time());
 	}
 
 	/**
