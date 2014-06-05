@@ -222,6 +222,11 @@ class Bike_Index_Sync_Admin {
 
 	public function bike_index_settings_manual_update() {
 		$options = get_option('bike-index-sync-settings');
+		if(isset($options['bikeindex_sync_queue']) && $options['bikeindex_sync_queue'] != '' && !empty($options['bikeindex_sync_queue']))
+			$queue_number = sizeof($options['bikeindex_sync_queue']);
+		else
+			$queue_number = "Empty";
+		echo '<p>Items in Queue: <strong>' . $queue_number . '</strong></p>';
 		echo '<input type="checkbox" name="bike-index-sync-settings[manual_update]" value="Yes"/>';
 	}
 
