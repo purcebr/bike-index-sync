@@ -95,95 +95,102 @@ class Bike_Index_Sync_Background {
 					$bikes_to_sync[] = array_shift($bikes);;
 				}
 				$queue = $bikes; //Save remaining bikes in the queue and proceed
+			} else {
+				$bikes_to_sync = $bikes;
 			}
 		}
-		foreach($bikes_to_sync as $bike) {
 
-			//first look up the bike record.
+		error_log("Syncing " . sizeof($bikes_to_sync) . " bikes...");
 
-			if(!isset($bike))
-				continue;
+		if(isset($bikes_to_sync) && !empty($bikes_to_sync)){
+			foreach($bikes_to_sync as $bike) {
 
-			$action = 'bikes/' . $bike;
-			$req = $this->api->post_json(array(), $action);
+				//first look up the bike record.
 
-			$bikes_response = json_decode($req['body']);
-			if(!isset($bikes_response->bikes))
-				continue;
+				if(!isset($bike))
+					continue;
 
-			$bike = $bikes_response->bikes;
+				$action = 'bikes/' . $bike;
+				$req = $this->api->post_json(array(), $action);
 
-			global $wpdb;
-			if(isset($bike)) {
+				$bikes_response = json_decode($req['body']);
+				if(!isset($bikes_response->bikes))
+					continue;
 
+				$bike = $bikes_response->bikes;
 
-				$bike_index_id = $bike->id;
-				$sql = "SELECT * FROM wp_postmeta WHERE meta_value = '" . $bike_index_id . "' AND meta_key = 'bike_id'";
-				
-				$results = $wpdb->get_results($sql);
-				if(isset($results[0])) {
-					$first_result = $results[0];
+				global $wpdb;
+				if(isset($bike)) {
 
 
-					$local_post_id = $first_result->post_id;
-					$first_result = $results[0];
-				}
-				else {
-					$local_post_id = '';
-				}
+					$bike_index_id = $bike->id;
+					$sql = "SELECT * FROM wp_postmeta WHERE meta_value = '" . $bike_index_id . "' AND meta_key = 'bike_id'";
+					
+					$results = $wpdb->get_results($sql);
+					if(isset($results[0])) {
+						$first_result = $results[0];
 
 
-				if(isset($bike->title)){
-					$bike_name = $bike->title;
-				}
-				else
-				{
-					$bike_name = "No Name Available";
-				}
-
-				if(isset($options['attribution_author']))
-					$author = $options['attribution_author'];
-				else
-					$author = 1;
-
-				if($local_post_id == '') {
-					// Create post object
-
-
-					$bike_args = array(
-					  'post_title'    => $bike_name,
-					  'post_content'  => '',
-					  'post_type'	  => "bikeindex_bike",
-					  'post_status'   => 'publish',
-					  'post_author'	  => $author,
-					);
-
-					// Insert the post into the database
-					$local_post_id = wp_insert_post( $bike_args );
-				} else {
-
-					$bike_args = array(
-					  'ID' => $local_post_id,
-					  'post_title'    => $bike_name,
-					  'post_content'  => '',
-					  'post_type'	  => "bikeindex_bike",
-					  'post_status'   => 'publish',
-					  'post_author'	  => $author,
-					);
-
-					// Update the post in the database
-					wp_update_post( $bike_args );
-				}
-				if($local_post_id != "") {
-					foreach($bike as $key => $value) {
-						if(is_object($value)) {
-							foreach($value as $sub_key => $sub_value) {
-						 		update_post_meta($local_post_id, "bike_" . $key . "_" . $sub_key, $sub_value);
-						 	}
-						}
-					 	update_post_meta($local_post_id, "bike_" . $key, $value);
+						$local_post_id = $first_result->post_id;
+						$first_result = $results[0];
 					}
-			 	}
+					else {
+						$local_post_id = '';
+					}
+
+
+					if(isset($bike->title)){
+						$bike_name = $bike->title;
+					}
+					else
+					{
+						$bike_name = "No Name Available";
+					}
+
+					if(isset($options['attribution_author']))
+						$author = $options['attribution_author'];
+					else
+						$author = 1;
+
+					if($local_post_id == '') {
+						// Create post object
+
+
+						$bike_args = array(
+						  'post_title'    => $bike_name,
+						  'post_content'  => '',
+						  'post_type'	  => "bikeindex_bike",
+						  'post_status'   => 'publish',
+						  'post_author'	  => $author,
+						);
+
+						// Insert the post into the database
+						$local_post_id = wp_insert_post( $bike_args );
+					} else {
+
+						$bike_args = array(
+						  'ID' => $local_post_id,
+						  'post_title'    => $bike_name,
+						  'post_content'  => '',
+						  'post_type'	  => "bikeindex_bike",
+						  'post_status'   => 'publish',
+						  'post_author'	  => $author,
+						);
+
+						// Update the post in the database
+						wp_update_post( $bike_args );
+					}
+					if($local_post_id != "") {
+						foreach($bike as $key => $value) {
+							if(is_object($value)) {
+								foreach($value as $sub_key => $sub_value) {
+							 		update_post_meta($local_post_id, "bike_" . $key . "_" . $sub_key, $sub_value);
+							 	}
+							}
+						 	update_post_meta($local_post_id, "bike_" . $key, $value);
+						}
+				 	}
+				}
 			}
 		}
 		update_option('bikeindex_sync_queue', $queue);
