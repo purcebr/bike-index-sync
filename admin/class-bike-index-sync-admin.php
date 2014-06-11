@@ -187,6 +187,21 @@ class Bike_Index_Sync_Admin {
 
 	public function bike_index_sync_settings_text_general() {
 		echo '<p>General settings for Bike Index Sync</p>';
+		$queue_option = get_option('bikeindex_sync_queue');
+		
+		if(isset($queue_option) && $queue_option != false)
+			$queue_number = sizeof($queue_option);
+		else
+			$queue_number = 0;
+
+		echo '<p>Items in Queue: <strong>' . $queue_number . '</strong></p>';
+		$last_updated_option = get_option('bikeindex_sync_last_updated');
+		if(isset($last_updated_option) && $last_updated_option != false)
+			$last_updated = date("m/d/y h:i:s", $last_updated_option);
+		else
+			$last_updated = "Never";
+
+		echo '<p>Last Updated: <strong>' . $last_updated . '</strong></p>';
 	}
 
 	public function bike_index_sync_settings_text() {
@@ -222,9 +237,7 @@ class Bike_Index_Sync_Admin {
 
 	public function bike_index_settings_manual_update() {
 		$options = get_option('bike-index-sync-settings');
-		$queue_number = $options['bikeindex_sync_queue'];
-		var_dump($queue_number);
-		echo '<p>Items in Queue: <strong>' . $queue_number . '</strong></p>';
+		echo '<input type="checkbox" name="bike-index-sync-settings[manual_update]" value="Yes"/>';
 	}
 
 
