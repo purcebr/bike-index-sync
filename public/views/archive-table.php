@@ -22,10 +22,15 @@
       if(isset($_GET['bike_orderby']) && $allowed_sort_meta_keys[$_GET['bike_orderby']]) {
         $args['orderby'] = 'meta_value';
         $args['meta_key'] = $_GET['bike_orderby'];
+      } else {
+        $args['orderby'] = 'meta_value';
+        $args['meta_key'] = 'bike_stolen_record_date_stolen';
       }
 
       if(isset($_GET['bike_order']) && ($_GET['bike_order'] == 'desc' || $_GET['bike_order'] == 'asc')) {
         $args['order'] = strtoupper($_GET['bike_order']);
+      } else {
+        $args['order'] = "DESC";
       }
 
       /* make a new query for the events */
@@ -40,10 +45,10 @@
 <tbody>
 
 <tr class="bike-row-odd">
-<td align="left" valign="top"><b><a href="?bike_orderby=bike_stolen_record_date_stolen&amp;bike_order=<?php echo (isset($_GET['bike_orderby']) && $_GET['bike_orderby'] == 'bike_stolen_record_date_stolen' && isset($_GET['bike_order']) && $_GET['bike_order'] =='desc') ? 'asc' : 'desc'; ?>">stolen date</a></b></td>
-<td align="left" valign="top"><b><a href="?bike_orderby=bike_frame_model&amp;bike_order=<?php echo (isset($_GET['bike_orderby']) && $_GET['bike_orderby'] == 'bike_frame_model' && isset($_GET['bike_order']) && $_GET['bike_order'] =='desc') ? 'asc' : 'desc'; ?>">model</a></b></td>
-<td align="left" valign="top"><b><a href="?bike_orderby=bike_manufacturer_name&amp;bike_order=<?php echo ($_GET['bike_orderby'] =='bike_manufacturer_name' && isset($_GET['bike_orderby']) && $_GET['bike_order'] =='desc' && isset($_GET['bike_order'])) ? 'asc' : 'desc'; ?>">manufacturer name</a></b></td>
-<td align="left" valign="top"><b>summary</b></td>
+<td align="left" class="mobile-hidden" valign="top"><b><a href="?bike_orderby=bike_stolen_record_date_stolen&amp;bike_order=<?php echo (isset($_GET['bike_orderby']) && $_GET['bike_orderby'] == 'bike_stolen_record_date_stolen' && isset($_GET['bike_order']) && $_GET['bike_order'] =='asc') ? 'desc' : 'asc'; ?>">Stolen Date</a></b></td>
+<td align="left" class="mobile-hidden" valign="top"><b><a href="?bike_orderby=bike_manufacturer_name&amp;bike_order=<?php echo ($_GET['bike_orderby'] =='bike_manufacturer_name' && isset($_GET['bike_orderby']) && $_GET['bike_order'] =='asc' && isset($_GET['bike_order'])) ? 'desc' : 'asc'; ?>">Manufacturer Name</a></b></td>
+<td align="left" class="mobile-hidden" valign="top"><b><a href="?bike_orderby=bike_frame_model&amp;bike_order=<?php echo (isset($_GET['bike_orderby']) && $_GET['bike_orderby'] == 'bike_frame_model' && isset($_GET['bike_order']) && $_GET['bike_order'] =='asc') ? 'desc' : 'asc'; ?>">Model</a></b></td>
+<td align="left" valign="top"><b>Overview</b></td>
 </tr>
 
 <?php while ( have_posts() ) : the_post(); ?>

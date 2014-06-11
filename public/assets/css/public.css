@@ -36,3 +36,30 @@
 	width: 100%;
 	height: 800px;
 }
+
+.bike-description-unavailable {
+	color: gray;
+}
+
+/* MEDIA QUERIES */
+
+.mobile-hidden {
+	display: none;
+}
+
+@media screen and (min-width: 600px) {
+.mobile-hidden {
+		display: table-cell;
+	}
+}
+
+
+.mobile-visible {
+	display: table-cell;
+}
+
+@media screen and (min-width: 600px) {
+.mobile-visible {
+		display: none;
+	}
+}
