@@ -70,6 +70,7 @@
 }
 
 .mobile-bike-filters select, .mobile-bike-filters input{
-	vertical-align: middle;
+	vertical-align: top;
 	display: inline-block;
+	margin: 10px 0;
 }
