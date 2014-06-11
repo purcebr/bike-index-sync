@@ -50,7 +50,7 @@
     <option value="desc" <?php if(isset($_GET['bike_order']) && $_GET['bike_order'] == 'desc') echo " selected='selected' "; ?>>Descending</option>
     <option value="asc" <?php if(isset($_GET['bike_order']) && $_GET['bike_order'] == 'asc') echo " selected='selected' "; ?>>Ascending</option>
   </select>
-  <input type="submit" value="Filter">
+  <input type="submit" value="Reorder">
   </form>
 </div>
 

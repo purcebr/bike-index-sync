@@ -69,8 +69,10 @@
 	display: block;
 }
 
-.mobile-bike-filters select, .mobile-bike-filters input{
+.mobile-bike-filters select{
 	vertical-align: top;
 	display: inline-block;
-	margin: 10px 0;
+}
+.mobile-bike-filters input {
+	float: right;
 }
