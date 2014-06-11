@@ -65,8 +65,13 @@
 }
 
 .mobile-bike-filters {
-	margin-bottom: 20px;
 	display: block;
+}
+
+@media screen and (min-width: 600px) {
+.mobile-bike-filters {
+	display: none;
+}
 }
 
 .mobile-bike-filters select{
