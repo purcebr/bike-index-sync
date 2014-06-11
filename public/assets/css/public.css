@@ -63,3 +63,13 @@
 		display: none;
 	}
 }
+
+.mobile-bike-filters {
+	margin-bottom: 20px;
+	display: block;
+}
+
+.mobile-bike-filters select, .mobile-bike-filters input{
+	vertical-align: middle;
+	display: inline-block;
+}
