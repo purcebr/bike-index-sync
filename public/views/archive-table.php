@@ -40,6 +40,20 @@
     $i = 1;
     ?>
 
+<form method="GET" class="mobile-visible">
+<select name="bike_orderby">
+  <option value="bike_stolen_record_date_stolen" <?php if(isset($_GET['bike_orderby']) && $_GET['bike_orderby'] == 'bike_stolen_record_date_stolen') echo " selected='selected' "; ?>>Date Stolen</option>
+  <option value="bike_manufacturer_name" <?php if(isset($_GET['bike_orderby']) && $_GET['bike_orderby'] == 'bike_manufacturer_name') echo " selected='selected' "; ?>>Manufacturer Name</option>
+  <option value="bike_frame_model" <?php if(isset($_GET['bike_orderby']) && $_GET['bike_orderby'] == 'bike_frame_model') echo " selected='selected' "; ?>>Model</option>
+</select>
+<select name="bike_order">
+  <option value="desc" <?php if(isset($_GET['bike_order']) && $_GET['bike_order'] == 'desc') echo " selected='selected' "; ?>>Descending</option>
+  <option value="asc" <?php if(isset($_GET['bike_order']) && $_GET['bike_order'] == 'asc') echo " selected='selected' "; ?>>Ascending</option>
+</select>
+<input type="submit" value="Filter">
+</form>
+
+
 
 <table width="100%" cellpadding="2" cellspacing="1" border="0">
 <tbody>

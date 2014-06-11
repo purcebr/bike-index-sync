@@ -16,16 +16,15 @@
 					No Manufacturer Available
 				<?php endif; ?>
 
-				<?php $bike_frame_model = get_post_meta($post->ID, 'bike_frame_model', true); ?>
-
 				<br />
 
+				<?php $bike_frame_model = get_post_meta($post->ID, 'bike_frame_model', true); ?>
+				<?php $bike_frame_year = get_post_meta($post->ID, 'bike_year', true); ?>
 				<?php if(isset($bike_frame_model) && $bike_frame_model != ''): ?>
-					Model: <a style="text-decoration: none;" href="<?php echo get_permalink(); ?>"><?php echo $bike_frame_model; ?></a>
+					Model: <a style="text-decoration: none;" href="<?php echo get_permalink(); ?>"><?php if($bike_frame_year != false) echo $bike_frame_year . ' '; ?><?php echo $bike_frame_model; ?></a>
 				<?php else: ?>
 					No Model Details Available
 				<?php endif; ?>
-
 			</p>
 
 			<?php $description = get_post_meta($post->ID, 'bike_description', true); ?>
@@ -46,8 +45,10 @@
 	</td>
 	<td align="left" valign="top" class="mobile-hidden">
 		<?php $bike_frame_model = get_post_meta($post->ID, 'bike_frame_model', true); ?>
+		<?php $bike_frame_year = get_post_meta($post->ID, 'bike_year', true); ?>
+
 		<?php if(isset($bike_frame_model) && $bike_frame_model != ''): ?>
-			<a style="text-decoration: none;" href="<?php echo get_permalink(); ?>"><?php echo $bike_frame_model; ?></a>
+			<a style="text-decoration: none;" href="<?php echo get_permalink(); ?>"><?php if($bike_frame_year != false) echo $bike_frame_year . ' '; ?><?php echo $bike_frame_model; ?></a>
 		<?php else: ?>
 			No Model Details Available
 		<?php endif; ?>
