@@ -179,6 +179,10 @@ class Bike_Index_Sync_Admin {
 
 		add_settings_field('api_key', 'API Key', array( $this, 'bike_index_settings_api_key'), 'bike-index-sync-settings', 'bike-index-sync-settings-section-one');
 		add_settings_field('api_secret', 'Organization ID', array( $this, 'bike_index_settings_org_key'), 'bike-index-sync-settings', 'bike-index-sync-settings-section-one');
+
+		add_settings_field('zipcode', 'Location (Zipcode)', array( $this, 'bike_index_settings_zipcode'), 'bike-index-sync-settings', 'bike-index-sync-settings-section-one');
+		add_settings_field('radius', 'Radius (Miles)', array( $this, 'bike_index_settings_radius'), 'bike-index-sync-settings', 'bike-index-sync-settings-section-one');
+
 		add_settings_field('attribution_author', 'Bike Posts Attribution Author', array( $this, 'bike_index_settings_attribution_author'), 'bike-index-sync-settings', 'bike-index-sync-settings-section-one');
 
 		add_settings_field('sync_records', 'Sync Records Per Interval (One Hour)', array( $this, 'bike_index_settings_sync_records'), 'bike-index-sync-settings', 'bike-index-sync-settings-section-one');
@@ -218,6 +222,16 @@ class Bike_Index_Sync_Admin {
 		echo "<input id='organization_id' name='bike-index-sync-settings[organization_id]' size='40' type='text' value='{$options['organization_id']}' />";
 	}
 
+	public function bike_index_settings_zipcode() {
+		$options = get_option('bike-index-sync-settings');
+		echo "<input id='zipcode' name='bike-index-sync-settings[zipcode]' size='10' type='text' value='{$options['zipcode']}' />";
+	}
+
+	public function bike_index_settings_radius() {
+		$options = get_option('bike-index-sync-settings');
+		echo "<input id='radius' name='bike-index-sync-settings[radius]' size='5' type='text' value='{$options['radius']}' />";
+	}
+
 	public function bike_index_settings_attribution_author() {
 		$options = get_option('bike-index-sync-settings');
 		if(isset($options['attribution_author']))
@@ -246,29 +260,6 @@ class Bike_Index_Sync_Admin {
 	*/
 
 	public function bike_index_sync_settings_validate($input) {
-
-
-
-		$this->api_key = $input['api_key'];
-		$this->attribution_author = $input['attribution_author'];
-		$this->organization_id = $input['organization_id'];
-		$this->manual_update = '';
-
-		if(isset($input['manual_update']) && $input['manual_update'] != "")
-		{
-			global $wpdb;
-			update_option('bikeindex_sync_last_updated', false); //Load it manually
-			update_option('bikeindex_sync_queue', ''); //Load it manually
-			$sql = "SELECT ID FROM " . $wpdb->posts . " WHERE post_type = 'bikeindex_bike'";
-			$results = $wpdb->get_results($sql);
-			
-
-			foreach($results as $bike) {
-				$wpdb->query("DELETE FROM " . $wpdb->posts . " WHERE ID = '" . $bike->ID . "'");
-				$wpdb->query("DELETE FROM " . $wpdb->postmeta . " WHERE post_id = '" . $bike->ID . "'");
-			}
-		}
-
 		return $input;
 	}
 

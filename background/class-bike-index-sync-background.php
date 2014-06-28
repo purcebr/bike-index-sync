@@ -102,7 +102,7 @@ class Bike_Index_Sync_Background {
 			$fresh_bikes = true;
 		}
 
-		error_log("Syncing " . sizeof($bikes_to_sync) . " bikes...");
+		//error_log("Syncing " . sizeof($bikes_to_sync) . " bikes...");
 
 		if(isset($bikes_to_sync) && !empty($bikes_to_sync)){
 			foreach($bikes_to_sync as $bike) {
@@ -238,8 +238,15 @@ class Bike_Index_Sync_Background {
 			"organization_slug" => $options['organization_id'],
 			"access_token" => $options['api_key'],
 			"stolen" => 1,
-			"updated_since" => $last_updated_timestamp
+			"updated_since" => $last_updated_timestamp,
+			"proximity" => $options['zipcode'],
+			"proximity_radius" => $options['radius'],
 		);
+
+		if(isset($options['radius']) && isset($options['zipcode'])) {
+			$data["proximity"] = $options['zipcode'];
+			$data["proximity_radius"] = $options['radius'];			
+		}
 
 		$action = 'bikes/stolen_ids';
 		$req = $this->api->post_json($data, $action);
