@@ -265,8 +265,31 @@ class Bike_Index_Sync {
 	 * @since    1.0.0
 	 */
 	private static function single_activate() {
+
 		$background = Bike_Index_Sync_Background::get_instance();
 		$background->activate_schedule();
+		self::set_up_option_defaults();
+	}
+
+	/**
+	 * Set up the Bike Index Sync default options.
+	 *
+	 * @since    1.0.0
+	 *
+	 */
+	private static function set_up_option_defaults() {
+
+		$sync_settings_defaults = array(
+			"api_key" => "",
+			"organization_id" => "",
+			"zipcode" => "",
+			"radius" => "25",
+			"attribution_author" => 1,
+			"sync_records" => "50",
+		);
+
+		add_option('bike-index-sync-settings', $sync_settings_defaults);
+
 	}
 
 	/**
@@ -275,7 +298,7 @@ class Bike_Index_Sync {
 	 * @since    1.0.0
 	 */
 	private static function single_deactivate() {
-		// @TODO: Define deactivation functionality here
+
 	}
 
 	/**

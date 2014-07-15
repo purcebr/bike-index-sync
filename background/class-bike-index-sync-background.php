@@ -46,8 +46,8 @@ class Bike_Index_Sync_Background {
 		 * Read more about actions and filters:
 		 * http://codex.wordpress.org/Plugin_API#Hooks.2C_Actions_and_Filters
 		 */
-		add_action( 'wp', array($this, 'sync_setup_schedule' ));
-		add_action( 'prefix_hourly_event', array($this, 'prefix_do_this_hourly' ));
+
+		add_action( 'bikeindexsync_hourly_event', array($this, 'bikeindexsync_do_this_hourly' ));
 		$this->api = new BikeIndexSyncAPI();
 	}
 
@@ -55,9 +55,9 @@ class Bike_Index_Sync_Background {
 	/**
 	 * On an early action hook, check if the hook is scheduled - if not, schedule it.
 	 */
-	function sync_setup_schedule() {
-		if ( ! wp_next_scheduled('prefix_hourly_event' ) ) {
-			wp_schedule_event( time(), 'hourly', 'prefix_hourly_event');
+	function activate_schedule() {
+		if ( ! wp_next_scheduled('bikeindexsync_hourly_event' ) ) {
+			wp_schedule_event( time(), 'hourly', 'bikeindexsync_hourly_event');
 		}
 	}
 
@@ -65,7 +65,7 @@ class Bike_Index_Sync_Background {
 	/**
 	 * On the scheduled action hook, run a function.
 	 */
-	function prefix_do_this_hourly() {
+	function bikeindexsync_do_this_hourly() {
 
 		// do something every hour
 		$last_synced = get_option("bikeindex_sync_last_updated");
