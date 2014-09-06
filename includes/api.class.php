@@ -13,10 +13,8 @@ class BikeIndexSyncAPI {
   function post_json($data, $action) {
     $formed_uri = $this->endpoint.'/'.$action;
     $full_url = $formed_uri . '?' . urldecode(http_build_query($data));
-    error_log($full_url);
     $request = new WP_Http();
     $response = $request->get($full_url);
-
     return $response;
   }
 }
