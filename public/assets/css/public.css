@@ -1,30 +1,5 @@
 /* This stylesheet is used to style the public-facing components of the plugin. */
 
-.bike-row-even {
-	background-color: #cdcdcd;
-}
-
-.bike-row-odd {
-	background-color: #ececec;	
-}
-
-.single-bikeindex_bike .btn {
-	padding: 5px 0;
-	border: 1px solid #C0C0C0;
-	color: #7E7E7E;
-	border-radius: 5px;
-	display: block;
-	text-align: center;
-	margin:10px 0;
-	text-decoration: none;
-	-webkit-transition: color .5s ease-in-out,background .5s ease-in-out;
-	transition: color .5s ease-in-out,background .5s ease-in-out;
-}
-
-.bike-stats {
-	margin: 0;
-	padding: 0;
-}
 
 .bike-stats li{
 	list-style: none;
@@ -39,47 +14,4 @@
 
 .bike-description-unavailable {
 	color: gray;
-}
-
-/* MEDIA QUERIES */
-
-.mobile-hidden {
-	display: none;
-}
-
-@media screen and (min-width: 600px) {
-.mobile-hidden {
-		display: table-cell;
-	}
-}
-
-
-.mobile-visible {
-	display: table-cell;
-}
-
-@media screen and (min-width: 600px) {
-.mobile-visible {
-		display: none;
-	}
-}
-
-.mobile-bike-filters {
-	display: block;
-	margin-bottom: 20px;
-}
-
-@media screen and (min-width: 600px) {
-.mobile-bike-filters {
-	display: none;
-}
-}
-
-.mobile-bike-filters select{
-	vertical-align: top;
-	display: inline-block;
-}
-.mobile-bike-filters input {
-	display: block;
-	margin: 10px 0 0 0;
 }

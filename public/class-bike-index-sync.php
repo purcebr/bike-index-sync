@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name.
+ * Bike Index Sync
  *
  * @package   Bike_Index_Sync
  * @author    Bryan Purcell <purcebr@gmail.com>
@@ -10,17 +10,10 @@
  */
 
 /**
- * Plugin class. This class should ideally be used to work with the
- * public-facing side of the WordPress site.
- *
- * If you're interested in introducing administrative or dashboard
- * functionality, then refer to `class-bike-index-sync-admin.php`
- *
- * @TODO: Rename this class to a proper name for your plugin.
- *
  * @package Bike_Index_Sync
  * @author  Bryan Purcell <purcebr@gmail.com>
  */
+
 class Bike_Index_Sync {
 
 	/**
@@ -30,7 +23,7 @@ class Bike_Index_Sync {
 	 *
 	 * @var     string
 	 */
-	const VERSION = '1.0.0';
+	const VERSION = '1.1.0';
 
 	/**
 	 * @TODO - Rename "bike-index-sync" to the name of your plugin
@@ -317,45 +310,27 @@ class Bike_Index_Sync {
 	}
 
 	/**
-	 * Register and enqueue public-facing style sheet.
+	 * Register and enqueue public-facing DataTables style sheet.
 	 *
-	 * @since    1.0.0
+	 * @since    1.1.0
 	 */
 	public function enqueue_styles() {
+		wp_enqueue_style( $this->plugin_slug . '-datatables-styles', plugins_url( 'assets/datatables/css/jquery.dataTables.min.css', __FILE__ ), array(), self::VERSION );
 		wp_enqueue_style( $this->plugin_slug . '-plugin-styles', plugins_url( 'assets/css/public.css', __FILE__ ), array(), self::VERSION );
+
 	}
 
 	/**
-	 * Register and enqueues public-facing JavaScript files.
+	 * Register and enqueues public-facing DataTables JavaScript files.
 	 *
-	 * @since    1.0.0
+	 * @since    1.1.0
 	 */
 	public function enqueue_scripts() {
-		wp_enqueue_script( $this->plugin_slug . '-plugin-script', plugins_url( 'assets/js/public.js', __FILE__ ), array( 'jquery' ), self::VERSION );
+		wp_enqueue_script('jquery');
+		wp_enqueue_script( $this->plugin_slug . '-datatables-script', plugins_url( 'assets/datatables/js/jquery.dataTables.min.js', __FILE__ ), array( 'jquery' ), self::VERSION );
+		wp_enqueue_script( $this->plugin_slug . '-public-script', plugins_url( 'assets/js/public.js', __FILE__ ), array( 'jquery', $this->plugin_slug . '-datatables-script' ), self::VERSION );
 	}
 
-	/**
-	 * NOTE:  Actions are points in the execution of a page or process
-	 *        lifecycle that WordPress fires.
-	 *
-	 *        Actions:    http://codex.wordpress.org/Plugin_API#Actions
-	 *        Reference:  http://codex.wordpress.org/Plugin_API/Action_Reference
-	 *
-	 * @since    1.0.0
-	 */
-	public function action_method_name() {
-		// @TODO: Define your action hook callback here
-	}
-
-	/**
-	 * NOTE:  Filters are points of execution in which WordPress modifies data
-	 *        before saving it or sending it to the browser.
-	 *
-	 *        Filters: http://codex.wordpress.org/Plugin_API#Filters
-	 *        Reference:  http://codex.wordpress.org/Plugin_API/Filter_Reference
-	 *
-	 * @since    1.0.0
-	 */
 	public function single_bike_content($content) {
 		global $post;
 		if ($post->post_type == 'bikeindex_bike' && is_single()) {
