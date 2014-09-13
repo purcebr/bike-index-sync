@@ -188,7 +188,7 @@ class Bike_Index_Sync_Admin {
 		add_settings_field('sync_records', 'Sync Records Per Interval (One Hour)', array( $this, 'bike_index_settings_sync_records'), 'bike-index-sync-settings', 'bike-index-sync-settings-section-one');
 		
 		// bdh reworded this
-		add_settings_field('manual_update', 'Clear & set hourly updatecron to YES?', array( $this, 'bike_index_settings_manual_update'), 'bike-index-sync-settings', 'bike-index-sync-settings-section-one');
+		add_settings_field('manual_update', 'Clear & set hourly update cron to YES?', array( $this, 'bike_index_settings_manual_update'), 'bike-index-sync-settings', 'bike-index-sync-settings-section-one');
 		
 		// bdh added NEW call to force immediate sync, non-cron
 		add_settings_field('hard_update', 'Force sync-new-bikes?', array( $this, 'bike_index_settings_hard_update'), 'bike-index-sync-settings', 'bike-index-sync-settings-section-one');
@@ -327,16 +327,16 @@ class Bike_Index_Sync_Admin {
 		if(isset($input['hard_checkforupdates']) && $input['hard_checkforupdates'] != "")
 		{
 			error_log("BIKEINDEX class-bike-index-sync-admin hard_checkforupdates DETECTED". $input['hard_checkforupdates']);
-			$sync_thing = new Bike_Index_Sync_Background();
-			$hard_run = $sync_thing->bikeindex_check_for_updates();
+			$background = Bike_Index_Sync_Background::get_instance();
+			$hard_run = $background->bikeindex_check_for_updates();
 		}
 
 		// Bdh added for HARD HARD CHECK FOR DELETES
 		if(isset($input['hard_checkfordeletes']) && $input['hard_checkfordeletes'] != "")
 		{
 			error_log("BIKEINDEX class-bike-index-sync-admin hard_checkfordeletes DETECTED". $input['hard_checkfordeletes']);
-			$sync_thing = new Bike_Index_Sync_Background();
-			$hard_run = $sync_thing->bikeindex_check_for_deletes();
+			$background = Bike_Index_Sync_Background::get_instance();
+			$hard_run = $background->bikeindex_check_for_deletes();
 		}
 
 

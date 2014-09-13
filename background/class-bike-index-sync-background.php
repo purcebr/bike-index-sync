@@ -34,7 +34,7 @@ class Bike_Index_Sync_Background {
 	// bdh made public so can be called by admin checkboxes
 	// purcebr if theres a better way for this, lmk
 	// private function __construct() {
-	public function __construct() {
+	private function __construct() {
 		/*
 		 * Call $plugin_slug from public plugin class.
 		 *
@@ -197,7 +197,7 @@ class Bike_Index_Sync_Background {
 		$bikes_in_this_blog=array();
 		
 		// Get all the bike's BikeIndex oids from the API
-		$bikes = $this->get_bikes_from_endpoint("forceit");
+		$bikes = $this->get_bikes_from_endpoint(true); //force
 		foreach($bikes as $api_pulled_bike_id) {
 			//error_log("bikeindex: bikeindexsync_check_for_deletes -- API handed me: " . $api_pulled_bike_id);
 			$bikes_from_api[]=$api_pulled_bike_id;
@@ -225,25 +225,22 @@ class Bike_Index_Sync_Background {
 		$difference_in_bikes = array_diff($bikes_in_this_blog,$bikes_from_api);
 		//error_log("bikeindex: size of differenece here -- : " . sizeof($difference_in_bikes));		
 		foreach($difference_in_bikes as $one_to_delete) {
-					// error_log("bikeindex: think I should delete bike with BikeIndex oid -- : " . $one_to_delete);		
-					
-					// get the POST OID from this BIKEINDEX OID
-					$post_id_to_kill = $wpdb->get_var("select post_id from " . $wpdb->postmeta . " WHERE meta_key='bike_id' and meta_value='$one_to_delete'");
-					// error_log("bikeindex: DELETE ROUTINE : post id " . $post_id_to_kill . " matches bikeindex ID: " . $one_to_delete . " in wp_postmeta");		
-					
-					// delete it from the meta and the posts
-					$sql_kill_one = "DELETE FROM " . $wpdb->postmeta . " WHERE meta_key='bike_id' and meta_value='$one_to_delete'";
-					$sql_kill_two = "DELETE FROM " . $wpdb->posts . " WHERE ID = '" . $post_id_to_kill . "'";
-					// error_log("bikeindex: DELETING bike postmeta:" . $sql_kill_one);		
-					// error_log("bikeindex: DELETING bike post:" . $sql_kill_two);
-					// run the actual deletes
-					$wpdb->query($sql_kill_one);
-				  $wpdb->query($sql_kill_two);
-		}
-		
+			// error_log("bikeindex: think I should delete bike with BikeIndex oid -- : " . $one_to_delete);		
+			
+			// get the POST OID from this BIKEINDEX OID
+			$post_id_to_kill = $wpdb->get_var("select post_id from " . $wpdb->postmeta . " WHERE meta_key='bike_id' and meta_value='$one_to_delete'");
+			// error_log("bikeindex: DELETE ROUTINE : post id " . $post_id_to_kill . " matches bikeindex ID: " . $one_to_delete . " in wp_postmeta");		
+			
+			// delete it from the meta and the posts
+			$sql_kill_one = "DELETE FROM " . $wpdb->postmeta . " WHERE meta_key='bike_id' and meta_value='$one_to_delete'";
+			$sql_kill_two = "DELETE FROM " . $wpdb->posts . " WHERE ID = '" . $post_id_to_kill . "'";
+			// error_log("bikeindex: DELETING bike postmeta:" . $sql_kill_one);		
+			// error_log("bikeindex: DELETING bike post:" . $sql_kill_two);
+			// run the actual deletes
+			$wpdb->query($sql_kill_one);
+			$wpdb->query($sql_kill_two);
+		}		
 	}
-
-
 
 	/**
 	 * On the scheduled action hook, run a function.
@@ -400,7 +397,7 @@ class Bike_Index_Sync_Background {
 		return self::$instance;
 	}
 
-	public function get_bikes_from_endpoint($force_past) {
+	public function get_bikes_from_endpoint($force_past = false) {
 
 		//First Check the Queue for any pending bike syncs
 
@@ -414,7 +411,7 @@ class Bike_Index_Sync_Background {
 		$last_updated_timestamp = get_option('bikeindex_sync_last_updated');
 		
 		// bdh added $force_past option to force past updates
-		if(!isset($last_updated_timestamp) || ($last_updated_timestamp == false) || ($force_past!="")) {
+		if(!isset($last_updated_timestamp) || ($last_updated_timestamp == false) || $force_past) {
 			$last_updated_timestamp = "915148800"; //in the past... Willenium.
 		}
 
