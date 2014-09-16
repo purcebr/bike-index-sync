@@ -186,7 +186,18 @@ class Bike_Index_Sync_Admin {
 		add_settings_field('attribution_author', 'Bike Posts Attribution Author', array( $this, 'bike_index_settings_attribution_author'), 'bike-index-sync-settings', 'bike-index-sync-settings-section-one');
 
 		add_settings_field('sync_records', 'Sync Records Per Interval (One Hour)', array( $this, 'bike_index_settings_sync_records'), 'bike-index-sync-settings', 'bike-index-sync-settings-section-one');
-		add_settings_field('manual_update', 'Update the listing now?', array( $this, 'bike_index_settings_manual_update'), 'bike-index-sync-settings', 'bike-index-sync-settings-section-one');
+		
+		// bdh reworded this
+		add_settings_field('manual_update', 'Clear & set hourly update cron to YES?', array( $this, 'bike_index_settings_manual_update'), 'bike-index-sync-settings', 'bike-index-sync-settings-section-one');
+		
+		// bdh added NEW call to force immediate sync, non-cron
+		add_settings_field('hard_update', 'Force sync-new-bikes?', array( $this, 'bike_index_settings_hard_update'), 'bike-index-sync-settings', 'bike-index-sync-settings-section-one');
+		// bdh added NEW call do a check for bikes needing local updates
+		add_settings_field('hard_checkforupdates', 'Force check-for-updates?', array( $this, 'bike_index_settings_hard_checkforupdates'), 'bike-index-sync-settings', 'bike-index-sync-settings-section-one');
+		// bdh added NEW call do a check for bikes needing deleted from local blog
+		add_settings_field('hard_checkfordeleted', 'Force check-for-deletes?', array( $this, 'bike_index_settings_hard_checkfordeletes'), 'bike-index-sync-settings', 'bike-index-sync-settings-section-one');
+
+		
 	}
 
 	public function bike_index_sync_settings_text_general() {
@@ -255,6 +266,24 @@ class Bike_Index_Sync_Admin {
 	}
 
 
+	// bdh added this for hard instant sync,  non-cron
+	public function bike_index_settings_hard_update() {
+		$options = get_option('bike-index-sync-settings');
+		echo '<input type="checkbox" name="bike-index-sync-settings[hard_update]" value="Yes"/>';
+	}
+	
+	// bdh ladded to check for UPDATES
+	public function bike_index_settings_hard_checkforupdates() {
+		$options = get_option('bike-index-sync-settings');
+		echo '<input type="checkbox" name="bike-index-sync-settings[hard_checkforupdates]" value="Yes"/>';
+	}
+	
+	// bdh ladded to check for DELETES
+	public function bike_index_settings_hard_checkfordeletes() {
+		$options = get_option('bike-index-sync-settings');
+		echo '<input type="checkbox" name="bike-index-sync-settings[hard_checkfordeletes]" value="Yes"/>';
+	}
+
 	/*
 	* Validate bike-index connection credentials with the Service, display warning if not valid.
 	*/
@@ -282,6 +311,34 @@ class Bike_Index_Sync_Admin {
 				$wpdb->query("DELETE FROM " . $wpdb->postmeta . " WHERE post_id = '" . $bike->ID . "'");
 			}
 		}
+
+		// Bdh added for HARD UPDATES
+		if(isset($input['hard_update']) && $input['hard_update'] != "")
+		{
+			error_log("BIKEINDEX class-bike-index-sync-admin HARD UPDATE DETECTED". $input['hard_update']);
+			$background = Bike_Index_Sync_Background::get_instance();
+			// do-this-hourly reaches out and uses the most recent update timestamp to force a sync of bikes
+			$hard_run = $background->bikeindexsync_do_this_hourly();
+			// $hard_run = $sync_thing->bikeindexsync_check_for_deletes();
+			//$hard_run = $sync_thing->bikeindex_check_for_updates();
+		}
+
+		// Bdh added for HARD CHECK FOR UPDATES
+		if(isset($input['hard_checkforupdates']) && $input['hard_checkforupdates'] != "")
+		{
+			error_log("BIKEINDEX class-bike-index-sync-admin hard_checkforupdates DETECTED". $input['hard_checkforupdates']);
+			$background = Bike_Index_Sync_Background::get_instance();
+			$hard_run = $background->bikeindex_check_for_updates();
+		}
+
+		// Bdh added for HARD HARD CHECK FOR DELETES
+		if(isset($input['hard_checkfordeletes']) && $input['hard_checkfordeletes'] != "")
+		{
+			error_log("BIKEINDEX class-bike-index-sync-admin hard_checkfordeletes DETECTED". $input['hard_checkfordeletes']);
+			$background = Bike_Index_Sync_Background::get_instance();
+			$hard_run = $background->bikeindex_check_for_deletes();
+		}
+
 
 		return $input;
 	}

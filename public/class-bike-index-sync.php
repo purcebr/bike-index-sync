@@ -23,7 +23,7 @@ class Bike_Index_Sync {
 	 *
 	 * @var     string
 	 */
-	const VERSION = '1.1.0';
+	const VERSION = '1.2.0';
 
 	/**
 	 * @TODO - Rename "bike-index-sync" to the name of your plugin
