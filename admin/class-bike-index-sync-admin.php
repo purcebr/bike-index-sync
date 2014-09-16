@@ -316,9 +316,9 @@ class Bike_Index_Sync_Admin {
 		if(isset($input['hard_update']) && $input['hard_update'] != "")
 		{
 			error_log("BIKEINDEX class-bike-index-sync-admin HARD UPDATE DETECTED". $input['hard_update']);
-			$sync_thing = new Bike_Index_Sync_Background();
+			$background = Bike_Index_Sync_Background::get_instance();
 			// do-this-hourly reaches out and uses the most recent update timestamp to force a sync of bikes
-			$hard_run = $sync_thing->bikeindexsync_do_this_hourly();
+			$hard_run = $background->bikeindexsync_do_this_hourly();
 			// $hard_run = $sync_thing->bikeindexsync_check_for_deletes();
 			//$hard_run = $sync_thing->bikeindex_check_for_updates();
 		}
