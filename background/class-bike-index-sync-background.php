@@ -223,19 +223,14 @@ class Bike_Index_Sync_Background {
 		// If there are, then delete them. 
 			
 		$difference_in_bikes = array_diff($bikes_in_this_blog,$bikes_from_api);
-		//error_log("bikeindex: size of differenece here -- : " . sizeof($difference_in_bikes));		
-		foreach($difference_in_bikes as $one_to_delete) {
-			// error_log("bikeindex: think I should delete bike with BikeIndex oid -- : " . $one_to_delete);		
-			
+
+		foreach($difference_in_bikes as $one_to_delete) {			
 			// get the POST OID from this BIKEINDEX OID
 			$post_id_to_kill = $wpdb->get_var("select post_id from " . $wpdb->postmeta . " WHERE meta_key='bike_id' and meta_value='$one_to_delete'");
-			// error_log("bikeindex: DELETE ROUTINE : post id " . $post_id_to_kill . " matches bikeindex ID: " . $one_to_delete . " in wp_postmeta");		
 			
 			// delete it from the meta and the posts
 			$sql_kill_one = "DELETE FROM " . $wpdb->postmeta . " WHERE meta_key='bike_id' and meta_value='$one_to_delete'";
 			$sql_kill_two = "DELETE FROM " . $wpdb->posts . " WHERE ID = '" . $post_id_to_kill . "'";
-			// error_log("bikeindex: DELETING bike postmeta:" . $sql_kill_one);		
-			// error_log("bikeindex: DELETING bike post:" . $sql_kill_two);
 			// run the actual deletes
 			$wpdb->query($sql_kill_one);
 			$wpdb->query($sql_kill_two);
@@ -247,7 +242,11 @@ class Bike_Index_Sync_Background {
 	 */
 	function bikeindexsync_do_this_hourly() {
 
-		// do something every hour
+		//First, check for deletes.
+
+		$this->bikeindex_check_for_deletes();
+
+		// Next - lets try to sync.
 		$last_synced = get_option("bikeindex_sync_last_updated");
 		$options = get_option("bike-index-sync-settings");
 
@@ -281,8 +280,6 @@ class Bike_Index_Sync_Background {
 			}
 			$fresh_bikes = true;
 		}
-
-		//error_log("Syncing " . sizeof($bikes_to_sync) . " bikes...");
 
 		if(isset($bikes_to_sync) && !empty($bikes_to_sync)){
 			foreach($bikes_to_sync as $bike) {

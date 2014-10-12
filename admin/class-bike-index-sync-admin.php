@@ -216,7 +216,7 @@ class Bike_Index_Sync_Admin {
 		else
 			$last_updated = "Never";
 
-		echo '<p>Last Updated: <strong>' . $last_updated . '</strong></p>';
+		echo '<p>Last Updated: <strong>' . $last_updated . ' UTC</strong></p>';
 	}
 
 	public function bike_index_sync_settings_text() {
