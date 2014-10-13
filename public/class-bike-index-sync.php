@@ -25,20 +25,6 @@ class Bike_Index_Sync {
 	 */
 	const VERSION = '1.2.0';
 
-	/**
-	 * @TODO - Rename "bike-index-sync" to the name of your plugin
-	 *
-	 * Unique identifier for your plugin.
-	 *
-	 *
-	 * The variable name is used as the text domain when internationalizing strings
-	 * of text. Its value should match the Text Domain file header in the main
-	 * plugin file.
-	 *
-	 * @since    1.0.0
-	 *
-	 * @var      string
-	 */
 	protected $plugin_slug = 'bike-index-sync';
 
 	/**
@@ -68,16 +54,9 @@ class Bike_Index_Sync {
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_styles' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 		add_filter( 'the_content', array( $this, 'single_bike_content' ) );
-
 		add_shortcode( 'bike_table', array( $this, 'show_bike_table'));
-		add_shortcode( 'bike_submit_form', array( $this, 'show_bike_submit_form'));
-
-		/* Define custom functionality.
-		 * Refer To http://codex.wordpress.org/Plugin_API#Hooks.2C_Actions_and_Filters
-		 */
-		
+		add_shortcode( 'bike_submit_form', array( $this, 'show_bike_submit_form'));		
 		add_action( 'init', array( $this, 'register_types' ) );
-		//add_action('after_setup_theme', array($this, 'cron_test'));
 	}
 
 	public function cron_test() {

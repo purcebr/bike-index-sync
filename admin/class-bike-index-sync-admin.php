@@ -289,9 +289,6 @@ class Bike_Index_Sync_Admin {
 	*/
 
 	public function bike_index_sync_settings_validate($input) {
-
-
-
 		$this->api_key = $input['api_key'];
 		$this->attribution_author = $input['attribution_author'];
 		$this->organization_id = $input['organization_id'];
@@ -305,40 +302,27 @@ class Bike_Index_Sync_Admin {
 			$sql = "SELECT ID FROM " . $wpdb->posts . " WHERE post_type = 'bikeindex_bike'";
 			$results = $wpdb->get_results($sql);
 			
-
 			foreach($results as $bike) {
 				$wpdb->query("DELETE FROM " . $wpdb->posts . " WHERE ID = '" . $bike->ID . "'");
 				$wpdb->query("DELETE FROM " . $wpdb->postmeta . " WHERE post_id = '" . $bike->ID . "'");
 			}
 		}
 
-		// Bdh added for HARD UPDATES
+		// Manual Check for updates
 		if(isset($input['hard_update']) && $input['hard_update'] != "")
 		{
 			error_log("BIKEINDEX class-bike-index-sync-admin HARD UPDATE DETECTED". $input['hard_update']);
 			$background = Bike_Index_Sync_Background::get_instance();
-			// do-this-hourly reaches out and uses the most recent update timestamp to force a sync of bikes
 			$hard_run = $background->bikeindexsync_do_this_hourly();
-			// $hard_run = $sync_thing->bikeindexsync_check_for_deletes();
-			//$hard_run = $sync_thing->bikeindex_check_for_updates();
 		}
 
-		// Bdh added for HARD CHECK FOR UPDATES
-		if(isset($input['hard_checkforupdates']) && $input['hard_checkforupdates'] != "")
-		{
-			error_log("BIKEINDEX class-bike-index-sync-admin hard_checkforupdates DETECTED". $input['hard_checkforupdates']);
-			$background = Bike_Index_Sync_Background::get_instance();
-			$hard_run = $background->bikeindex_check_for_updates();
-		}
-
-		// Bdh added for HARD HARD CHECK FOR DELETES
+		// Hard Check for deletes
 		if(isset($input['hard_checkfordeletes']) && $input['hard_checkfordeletes'] != "")
 		{
 			error_log("BIKEINDEX class-bike-index-sync-admin hard_checkfordeletes DETECTED". $input['hard_checkfordeletes']);
 			$background = Bike_Index_Sync_Background::get_instance();
 			$hard_run = $background->bikeindex_check_for_deletes();
 		}
-
 
 		return $input;
 	}

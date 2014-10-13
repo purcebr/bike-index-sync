@@ -31,9 +31,6 @@ class Bike_Index_Sync_Background {
 	 *
 	 * @since     1.0.0
 	 */
-	// bdh made public so can be called by admin checkboxes
-	// purcebr if theres a better way for this, lmk
-	// private function __construct() {
 	private function __construct() {
 		/*
 		 * Call $plugin_slug from public plugin class.
@@ -64,123 +61,8 @@ class Bike_Index_Sync_Background {
 	}
 
 	/*
-	* bdh: bikeindex_check_for_updates()
-	* Pull the last update times for all the bikes in the local blog
-	* Ping into the API and look for their update times in BikeIndex, i.e. bike_registration_updated_at
-	* If the timestamp from the API is newer than the date on file in the local blog, make an update
-	* and update the wp_postmeta too. This way changes from BikeIndex get synced to local blogs. 
-	*/
-	
-	function bikeindex_check_for_updates() {
-		global $wpdb;
-		$bikes_in_this_blog = array();
-		
-		// Grab all bike post ids so we can iterate on them
-		$sql = "SELECT ID FROM " . $wpdb->posts . " WHERE post_type = 'bikeindex_bike'";
-		// bdh temp limiter for debugging
-		// $sql .= " limit 2";
-		// error_log("bikeindex: bikeindex_check_for_updates");
-		// error_log("bikeindex: bikeindex_check_for_updates running: " . $sql);
-		
-		$local_bike_posts = $wpdb->get_results($sql);
-		
-		// Pulls a list of all the bikeindex IDs that we have posts for in this blog into $bikes_in_this_blog
-		foreach($local_bike_posts as $bikepost) {
-					$sqlx = "select meta_value from " . $wpdb->postmeta . " WHERE post_id = '" . $bikepost->ID . "' and meta_key='bike_id'";
-					$a_meta_id = $wpdb->get_var($sqlx);
-					$bikes_in_this_blog[$bikepost->ID] = $a_meta_id;
-					// error_log("bikeindex: bikeindex_check_for_updates: pulled a bike BI oid from local blog: " . $a_meta_id);
-		}
-		
-	
-		//
-		// For each bike ID in $bikes_in_this_blog call API and get the BikeIndex's last-update-time
-		// Results go into $bike_api_oids_to_updatedates[$bike_index_id]=$bike_registration_updated_at;
-		//
-		$bike_api_oids_to_updatedates=array();
-		foreach ($bikes_in_this_blog as $bike) {
-			
-			$action = 'bikes/' . $bike;
-			$req = $this->api->post_json(array(), $action);
-			$bikes_response = json_decode($req['body']);
-			$bike = $bikes_response->bikes;
-			if(isset($bike)) {
-						$bike_index_id = $bike->id;
-						// registration_updated_at stored like: 2014-08-11T00:03:14-05:00
-						$bike_registration_updated_at = $bike->registration_updated_at;
-						$bike_api_oids_to_updatedates[$bike_index_id]=$bike_registration_updated_at;
-						//error_log("bikeindex: bikeindex_check_for_updates bike ID: " . $bike_index_id . " and updated date: " . $bike_registration_updated_at);
-			}	
-		}
-		
-		//
-		// Iterate on $bikes_in_this_blog, compare dates - if they differ, then we need to make a post update
-		//
-		foreach ($bikes_in_this_blog as $wp_post_oid=>$one_local_bike_bikeindex_oid) {
-				//error_log("bikeindex:1 API says bike " . $one_local_bike_bikeindex_oid . " has post ID of " . $wp_post_oid . " and update date of: " . 	$bike_api_oids_to_updatedates[$one_local_bike_bikeindex_oid]);
-				$a_local_last_update = $wpdb->get_var( "SELECT meta_value FROM " . $wpdb->postmeta . " WHERE meta_key = 'bike_registration_updated_at' and post_id=" .$wp_post_oid);
-				//error_log("bikeindex:2 local check says bike " . $one_local_bike_bikeindex_oid . " has update time of " . $a_local_last_update);
-				
-				// IF the times dont match, do all the work to update
-				if ($a_local_last_update!=$bike_api_oids_to_updatedates[$one_local_bike_bikeindex_oid]) {
-					//error_log("bikeindex: *** BIKE $one_local_bike_bikeindex_oid (wp_postoid: $wp_post_oid) wp_post is being updated ***");
-				
-					// Bake a bike by reaching out to the API
-					$action = 'bikes/' . $one_local_bike_bikeindex_oid;
-					$req = $this->api->post_json(array(), $action);
-					$bikes_response = json_decode($req['body']);
-					if(!isset($bikes_response->bikes))
-						continue;
-					$bike = $bikes_response->bikes;
-					
-					//error_log("bikeindex: bikeindex_check_for_updates serializing the bike info I just pulled from API: " . serialize($bike));
-				
-					// clean some things up			
-					if(isset($bike->title)){ $bike_name = $bike->title;} else {$bike_name = "No Name Available";}
-					if(isset($options['attribution_author'])) {$author = $options['attribution_author'];} else{$author = 1;}
-										
-					$bike_args = array(
-								  'ID' => $wp_post_oid,
-								  'post_title'    => $bike_name,
-								  'post_content'  => '',
-								  'post_type'	  => "bikeindex_bike",
-								  'post_status'   => 'publish',
-								  'post_author'	  => $author,
-					);
-				
-					// Update the post in the database
-					$update = wp_update_post($bike_args,$wp_error = false);
-					// did we get an wp_error back
-					if ( $wp_error ) {error_log("bikeindex: any wp_error from update? " . $update->get_error_message()); }
-							
-					//error_log("bikeindex: updated post: $wp_post_oid wp_post_id -- $wp_post_oid");
-					//error_log("bikeindex: updated post: bike_name = $bike_name");
-					//error_log("bikeindex: bikeindex_check_for_updates done updating local post ID: " . $wp_post_oid);
-				
-					if($wp_post_oid != "") {
-									foreach($bike as $key => $value) {
-											if(is_object($value)) {
-												foreach($value as $sub_key => $sub_value) {
-											 		update_post_meta($wp_post_oid, "bike_" . $key . "_" . $sub_key, $sub_value);
-											 	}
-											}
-										 	update_post_meta($wp_post_oid, "bike_" . $key, $value);
-									}
-					}
-				
-				} // ends times didnt match, do work
-				else {
-					// error_log("bikeindex: NOOP - times are the same locally and remote");
-				}	
-		}
-		return 1;
-	}
-
-
-
-	/*
 	* 
-	* bdh: bikeindexsync_check_for_deletes()
+	* bikeindexsync_check_for_deletes()
 	*
 	* Routine to look for bikes in the local blog that need to be  
 	* deleted because they are no longer listed in the BikeIndex API call.
@@ -215,9 +97,11 @@ class Bike_Index_Sync_Background {
 				//error_log("bikeindex: pulled a bike BI oid from local blog: " . $a_meta_id);
 				$bikes_in_this_blog[] = $a_meta_id;
 		}
-			
-		// error_log("bikeindex: num bikes pulled from API -- : " . sizeof($bikes_from_api));		
-		// error_log("bikeindex: num bikes pulled from local records -- : " . sizeof($bikes_in_this_blog));		
+
+		if(WP_DEBUG == true) {
+			error_log("bikeindex: num bikes pulled from API -- : " . sizeof($bikes_from_api));		
+			error_log("bikeindex: num bikes pulled from local records -- : " . sizeof($bikes_in_this_blog));			
+		}			
 		
 		// Are there bikes listed in this blogs array of bikes but not in the API list? 
 		// If there are, then delete them. 
