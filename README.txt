@@ -22,7 +22,7 @@ Usage: Shortcodes
 
     Another shortcode is available for generating a bike submission form for your organization. Once the org data is set up in settings, you can create a blank page, and place the following code inside: 
 
-    `[show_bike_submit_form]`
+    `[bike_submit_form]`
 
     A form will appear in that will allow your users to submit bikes to the index, through your organization's accounrt.
 
