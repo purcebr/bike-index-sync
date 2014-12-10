@@ -14,7 +14,7 @@
  * Plugin Name:       Bike Index Sync
  * Plugin URI:        http://bikeindex.org
  * Description:       A WP Plugin for displaying nearby stolen bikes.
- * Version:           1.0.0
+ * Version:           1.0.1
  * Author:            Bryan Purcell
  * Author URI:        http://github.com/purcebr
  * Text Domain:       bike-index-widget-locale
@@ -44,6 +44,15 @@ register_activation_hook( __FILE__, array( 'Bike_Index_Sync', 'activate' ) );
 register_deactivation_hook( __FILE__, array( 'Bike_Index_Sync', 'deactivate' ) );
 
 add_action( 'plugins_loaded', array( 'Bike_Index_Sync', 'get_instance' ) );
+
+add_filter('http_request_timeout','bikindex_sync_callback');
+/**
+ * @param integer $time
+ * @return integer
+*/
+function bikindex_sync_callback($time){
+    return 25; // Rewrite the timeout to 25 seconds.
+}
 
 /*----------------------------------------------------------------------------*
  * Dashboard and Administrative Functionality
