@@ -187,7 +187,7 @@ class Bike_Index_Sync_Background {
 
 
 					$bike_index_id = $bike->id;
-					$sql = "SELECT * FROM wp_postmeta WHERE meta_value = '" . $bike_index_id . "' AND meta_key = 'bike_id'";
+					$sql = "SELECT * FROM " . $wpdb->postmeta . " WHERE meta_value = '" . $bike_index_id . "' AND meta_key = 'bike_id'";
 					
 					$results = $wpdb->get_results($sql);
 					if(isset($results[0])) {
